@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:twige/styles.dart';
 
 class UploadsPage extends StatefulWidget {
   @override
@@ -19,13 +20,20 @@ class _UploadsPageState extends State<UploadsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 107, 141, 68),
+        backgroundColor: primaryColor,
         appBar: AppBar(
-          title: Text('Uploads Page'),
+          backgroundColor: secondaryColor,
+          centerTitle: false,
+          leading: SizedBox(width: 60),
+          title: Text('Pending Uploads',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: whiteColor,
+              )),
         ),
         body: GridView.builder(
           // primary: false,
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.fromLTRB(60, 20, 60, 0),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,

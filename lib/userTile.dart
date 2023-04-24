@@ -1,5 +1,7 @@
+// not completely functional yet
+// used in conjunction with usersPage.dart NOT users.dart
+
 import 'package:flutter/material.dart';
-import 'package:twige/usersPage.dart';
 
 bool _showSubtitle = false;
 bool _showLeadingIcon = true;
@@ -47,8 +49,6 @@ class UserListTile extends StatefulWidget {
 }
 
 class _UserListTileState extends State<UserListTile> {
-  String _childMessage = 'Hello from child!';
-
   void deleteUser(username) {
     widget.deleteUser(widget.username);
   }

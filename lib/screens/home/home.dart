@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:twige/screens/home/uploads.dart';
 import 'package:twige/screens/home/users.dart';
 import 'package:english_words/english_words.dart';
-
+import 'package:twige/styles.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -24,25 +24,30 @@ class _MyHomePageState extends State<MyHomePage> {
         page = UploadsPage();
         break;
       case 2:
-        page = UsersPage();
+        page = UserManagement();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
+        backgroundColor: primaryColor,
         appBar: AppBar(
-            centerTitle: false,
+            backgroundColor: primaryColor,
+            centerTitle: true,
             title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                     height: 100,
                     width: 100,
                     child: Image.asset('assets/images/sheerlove.png')),
+                SizedBox(width: 20),
                 Text(
                   'Welcome Admin!',
                   textDirection: TextDirection.ltr,
                   textAlign: TextAlign.start,
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 )
               ],
             )),
@@ -52,20 +57,13 @@ class _MyHomePageState extends State<MyHomePage> {
               child: NavigationRail(
                 extended: constraints.maxWidth >= 600,
                 destinations: [
-                  // NavigationRailDestination(
-                  //     icon: ImageIcon(
-                  //       NetworkImage(
-                  //           'https://t4.ftcdn.net/jpg/03/16/68/69/360_F_316686992_OvCTP1wfazJhBeMrBBDUGooufSmj2O8G.jpg'),
-                  //       color: Colors.white,
-                  //     ),
-                  // label: Text('')),
                   NavigationRailDestination(
                     icon: Icon(Icons.home_rounded),
                     label: Text('Home'),
                   ),
                   NavigationRailDestination(
                     icon: Icon(Icons.menu_book_rounded),
-                    label: Text('Pictionary'),
+                    label: Text('Uploads'),
                   ),
                   NavigationRailDestination(
                     icon: Icon(Icons.person_rounded),
@@ -94,8 +92,6 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class MyAppState extends ChangeNotifier {
-  var numUsers = 25;
-  var uploads = 10;
   var current = WordPair.random();
   void getNext() {
     current = WordPair.random();
@@ -112,8 +108,6 @@ class MyAppState extends ChangeNotifier {
     }
     notifyListeners();
   }
-
-  var picRequests = <PicPrev>[];
 }
 
 class MainPage extends StatelessWidget {
@@ -128,162 +122,103 @@ class MainPage extends StatelessWidget {
     //   icon = Icons.favorite_border;
     // }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
+    return Scaffold(
+      backgroundColor: primaryColor,
+      appBar: AppBar(
+          backgroundColor: secondaryColor,
+          centerTitle: false,
+          leading: SizedBox(width: 60),
+          title: Text(
+            'Home',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: whiteColor,
+            ),
+          )),
+      body: Column(
+        children: [
+          Padding(
             padding: const EdgeInsets.fromLTRB(60, 30, 0, 0),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(
-                'Home',
-                style: TextStyle(fontWeight: FontWeight.bold),
-                textScaleFactor: 1,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 50, 20, 0),
-                child: Text(
-                  'Overview:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                  textScaleFactor: 1.5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Text(
+                //   'Overview:\n',
+                //   style: TextStyle(
+                //     fontWeight: FontWeight.bold,
+                //     color: whiteColor,
+                //   ),
+                //   textScaleFactor: 1.5,
+                // ),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => UserManagement()));
+                      },
+                      child: HomeCard(
+                        cardName: 'Active Users',
+                        count: users.length,
+                        icon: Icon(
+                          Icons.person,
+                          color: whiteColor,
+                          size: 30.0,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 40),
+                    HomeCard(
+                      cardName: 'Uploads',
+                      count: uploads.length,
+                      icon: Icon(
+                        Icons.upload_rounded,
+                        color: whiteColor,
+                        size: 30.0,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ])),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(55, 20, 0, 0),
-          child: Row(
-            children: [
-              GestureDetector(
-                  onTap: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => UserManagement()));
-                  },
-                  child: UserCard()),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
-                child: PictionaryCard(),
-              ),
-            ],
+                SizedBox(height: 100),
+              ],
+            ),
           ),
-        ),
-        SizedBox(height: 100),
-        // Row(
-        //   mainAxisSize: MainAxisSize.min,
-        //   children: [
-        //     ElevatedButton.icon(
-        //       onPressed: () {
-        //         appState.toggleFavorite();
-        //       },
-        //       icon: Icon(icon),
-        //       label: Text('Like'),
-        //     ),
-        //     SizedBox(width: 10),
-        //     ElevatedButton(
-        //       onPressed: () {
-        //         appState.getNext();
-        //       },
-        //       child: Text('Next'),
-        //     ),
-        //   ],
-        // ),
-        Container(
-            color: Color.fromARGB(255, 107, 141, 68),
-            child: Padding(
-              padding: EdgeInsets.all(60),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Pending Approval...',
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      PicPrev(),
-                      SizedBox(width: 20),
-                      PicPrev(),
-                      SizedBox(width: 20),
-                      PicPrev(),
-                      Text('   PHOTO PREVIEWS...')
-                    ],
-                  ),
-                ],
-              ),
-            )),
-      ],
-    );
-  }
-}
-
-// class PicsPage extends _MyHomePageState {
-// // class PicsPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     var appState = context.watch<MyAppState>();
-//     //var picRequests = filler[];
-
-//     if (appState.favorites.isEmpty) {
-//       return Center(
-//         child: Text('No favorites yet.'),
-//       );
-//     }
-//     return ListView(
-//       children: [
-//         Padding(
-//           padding: const EdgeInsets.all(20.0),
-//           child: Text('${appState.favorites.length} favorites:'),
-//         ),
-//         for (var pair in appState.favorites)
-//           ListTile(
-//             leading: Icon(Icons.favorite),
-//             title: Text(pair.asLowerCase),
-//           ),
-//       ],
-//       //Pictionary upload requests
-//     );
-//   }
-// }
-
-class UserManagement extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<_MyHomePageState>();
-    var userList = ['example1', 'example2', 'example3'];
-    //var picRequests = filler[];
-
-    // if (appState.favorites.isEmpty) {
-    //   return Center(
-    //     child: Text('No favorites yet.'),
-    //   );
-    // }
-    return ListView(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Text('List of Users'),
-        ),
-        // for (var i = 0; i < userList.length; i++)
-        // listbuilder()
-      ],
-      //Pictionary upload requests
-    );
-  }
-}
-
-class PicPrev extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 150,
-      height: 150,
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        border: Border.all(),
+          Container(
+            child: Expanded(
+              child: Container(
+                  color: secondaryColor,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(60, 30, 60, 60),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Pending Approval...',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: whiteColor,
+                            )),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            uploads[0],
+                            SizedBox(width: 20),
+                            uploads[1],
+                            SizedBox(width: 20),
+                            uploads[2],
+                          ],
+                        ),
+                      ],
+                    ),
+                  )),
+            ),
+          ),
+        ],
       ),
-      child: Image(
-          image: NetworkImage(
-              'https://t4.ftcdn.net/jpg/03/16/68/69/360_F_316686992_OvCTP1wfazJhBeMrBBDUGooufSmj2O8G.jpg')),
     );
   }
 }
@@ -326,65 +261,20 @@ class PicPrev extends StatelessWidget {
 //   }
 // }
 
-class PictionaryCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var numRequests = 10;
-    var theme = Theme.of(context);
-    var large = theme.textTheme.displaySmall!.copyWith(
-      color: theme.colorScheme.surface,
-      fontSize: 20,
-      fontWeight: FontWeight.bold,
-    );
-    var big = theme.textTheme.displaySmall!.copyWith(
-      color: theme.colorScheme.surface,
-      fontSize: 30,
-    );
+class HomeCard extends StatefulWidget {
+  final String cardName;
+  final int count;
+  final Icon icon;
 
-    return Card(
-        color: theme.colorScheme.primary,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Container(
-              height: 85,
-              width: 180,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Upload Requests",
-                    style: large,
-                  ),
-                  SizedBox(height: 15),
-                  Row(children: [
-                    Container(
-                        decoration: const ShapeDecoration(
-                            shape: CircleBorder(),
-                            color: Color.fromARGB(255, 107, 141, 68)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.menu_book_rounded,
-                            color: Colors.white,
-                            size: 30.0,
-                          ),
-                        )),
-                    SizedBox(width: 40),
-                    Text(
-                      '$numRequests',
-                      style: big,
-                    ),
-                  ])
-                ],
-              )),
-        ));
-  }
+  HomeCard({required this.cardName, required this.count, required this.icon});
+
+  @override
+  _HomeCardState createState() => _HomeCardState();
 }
 
-class UserCard extends StatelessWidget {
+class _HomeCardState extends State<HomeCard> {
   @override
   Widget build(BuildContext context) {
-    var numUsers = 25;
     var theme = Theme.of(context);
     var large = theme.textTheme.displaySmall!.copyWith(
       color: theme.colorScheme.surface,
@@ -397,41 +287,38 @@ class UserCard extends StatelessWidget {
     );
 
     return Card(
-        color: theme.colorScheme.primary,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Container(
-              height: 85,
-              width: 180,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        color: secondaryColor,
+        child: Container(
+          width: 180,
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.cardName,
+                style: large,
+              ),
+              SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Active Users",
-                    style: large,
-                  ),
-                  SizedBox(height: 15),
-                  Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                    Container(
-                        decoration: const ShapeDecoration(
-                            shape: CircleBorder(),
-                            color: Color.fromARGB(255, 107, 141, 68)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.person,
-                            color: Colors.white,
-                            size: 30.0,
-                          ),
-                        )),
-                    SizedBox(width: 40),
-                    Text(
-                      '$numUsers',
-                      style: big,
+                  Container(
+                    decoration: const ShapeDecoration(
+                        shape: CircleBorder(), color: primaryColor),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: widget.icon,
                     ),
-                  ])
+                  ),
+                  Text(
+                    widget.count.toString(),
+                    style: big,
+                  ),
+                  SizedBox(width: 15)
                 ],
-              )),
+              )
+            ],
+          ),
         ));
   }
 }

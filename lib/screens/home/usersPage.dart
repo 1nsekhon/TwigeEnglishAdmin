@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'userTile.dart';
+import 'package:twige/styles.dart';
+import '../../userTile.dart';
 
 class UsersPage extends StatefulWidget {
   @override
@@ -46,13 +47,17 @@ class _UsersPageState extends State<UsersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 107, 141, 68),
+        backgroundColor: primaryColor,
         appBar: AppBar(
-          title: const Text('Users List'),
+          backgroundColor: secondaryColor,
+          leading: SizedBox(width: 60),
+          centerTitle: false,
+          title: const Text('List of Users'),
         ),
         body: Stack(children: [
           // user list
           ListView.builder(
+              padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
               itemCount: users.length,
               itemBuilder: (context, index) {
                 final user = users[index];
