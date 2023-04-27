@@ -10,6 +10,7 @@ class _UserManagementState extends State<UserManagement> {
   bool _showOverlay = false;
   String _displayName = 'No user chosen';
   int _displayNum = 0;
+  int _displayIndex = 0;
 
   //example list of users
   // List<User> users = [
@@ -28,9 +29,17 @@ class _UserManagementState extends State<UserManagement> {
 
   void _showDetails(int index) {
     setState(() {
+      _displayIndex = index;
       _displayName = users[index].username;
       _displayNum = users[index].phone;
-      _showOverlay = !_showOverlay;
+      _toggleOverlay();
+    });
+  }
+
+  void deleteUser() {
+    _toggleOverlay();
+    setState(() {
+      users.removeAt(_displayIndex);
     });
   }
 
@@ -54,20 +63,6 @@ class _UserManagementState extends State<UserManagement> {
           itemCount: users.length,
           itemBuilder: (context, index) {
             final user = users[index];
-            //return GestureDetector(
-            // onTap: () {
-            // Navigator.of(context)
-            //     .push(MaterialPageRoute(builder: (context) {
-            //   return UserInfo(name: user.username, num: user.phone);
-            // }));
-            // _toggleOverlay();
-            // if(_showOverlay) {
-            // GestureDetector(
-            //   onTap: _toggleOverlay,
-            //   child: UserInfo(name: user.username, num: user.phone),);
-            // }
-            //},
-            //child: ListTile(
             return ListTile(
                 hoverColor: tileHoverColor,
                 selectedTileColor: tileSelectColor,
@@ -88,7 +83,8 @@ class _UserManagementState extends State<UserManagement> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text('$_displayName, $_displayNum'),
-                  Icon(Icons.delete),
+                  GestureDetector(
+                      onTap: () => deleteUser(), child: Icon(Icons.delete)),
                 ],
               ),
             ),

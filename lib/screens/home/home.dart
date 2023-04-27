@@ -11,7 +11,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var selectedIndex = 0;
+  var selectedIndex = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +39,10 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                    height: 100,
-                    width: 100,
-                    child: Image.asset('assets/images/sheerlove.png')),
+                  height: 110,
+                  width: 110,
+                  child: Image.asset('assets/images/sheerlove.png'),
+                ),
                 SizedBox(width: 20),
                 Text(
                   'Welcome Admin!',
@@ -59,15 +60,30 @@ class _MyHomePageState extends State<MyHomePage> {
                 destinations: [
                   NavigationRailDestination(
                     icon: Icon(Icons.home_rounded),
-                    label: Text('Home'),
+                    label: Text(
+                      'Home',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                   NavigationRailDestination(
                     icon: Icon(Icons.menu_book_rounded),
-                    label: Text('Uploads'),
+                    label: Text(
+                      'Uploads',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                   NavigationRailDestination(
                     icon: Icon(Icons.person_rounded),
-                    label: Text('User Management'),
+                    label: Text(
+                      'User Management',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ],
                 selectedIndex: selectedIndex,

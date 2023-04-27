@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:twige/main.dart';
 import 'package:twige/styles.dart';
+
+bool showDets = false;
 
 class UploadsPage extends StatefulWidget {
   @override
@@ -7,18 +10,14 @@ class UploadsPage extends StatefulWidget {
 }
 
 class _UploadsPageState extends State<UploadsPage> {
-// class PicsPage extends StatelessWidget {
-  List<Upload> uploads = [
-    Upload(),
-    Upload(),
-    Upload(),
-    Upload(),
-    Upload(),
-    Upload()
-  ];
-
   @override
   Widget build(BuildContext context) {
+    void uploadTap(int index) {
+      uploads[index].showOptions = !uploads[index].showOptions;
+      print('$index');
+      uploads.removeAt(index);
+    }
+
     return Scaffold(
         backgroundColor: primaryColor,
         appBar: AppBar(
@@ -31,69 +30,166 @@ class _UploadsPageState extends State<UploadsPage> {
                 color: whiteColor,
               )),
         ),
-        body: GridView.builder(
-          // primary: false,
-          padding: const EdgeInsets.fromLTRB(60, 20, 60, 0),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            crossAxisCount: 4,
-          ),
-          itemCount: uploads.length,
-          itemBuilder: (context, index) {
-            final upload = uploads[index];
+        body: LayoutBuilder(builder: (context, constraints) {
+          return GridView.builder(
+            // primary: false,
+            padding: const EdgeInsets.fromLTRB(40, 20, 20, 0),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              crossAxisCount: constraints.maxWidth > 700 ? 4 : 2,
+            ),
+            itemCount: uploads.length,
+            itemBuilder: (context, index) {
+              final upload = uploads[index];
 
-            return upload;
-          },
-        )
-        // gridDelegate: gridDelegate, itemBuilder: itemBuilder));
-        );
+              return GestureDetector(
+                onTap: () => uploadTap(index),
+                child: upload,
+              );
+              // child: Container(
+              //   width: 100,
+              //   height: 100,
+              //   color: whiteColor,
+              // ));
+
+              //       toggleApprove
+              //           ? Container(
+              //               height: 50,
+              //               width: 150,
+              //               alignment: Alignment.center,
+              //               color: secondaryColor.withOpacity(.70),
+              //               child: Row(
+              //                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //                   children: [
+              //                     Icon(Icons.check_circle),
+              //                     Icon(Icons.delete_forever_rounded),
+              //                   ]))
+              //           : SizedBox(),
+              //     ],
+              //   ),
+              // );
+            },
+          );
+        }));
   }
 }
 
-// var appState = context.watch<MyAppState>();
-//var picRequests = filler[];
+// class UploadWrapper extends StatefulWidget {
+//   final Upload upload;
 
-// if (appState.favorites.isEmpty) {
-//   return Center(
-//     child: Text('No favorites yet.'),
-//   );
-// }
-// return ListView(
-//   children: [
-//     Padding(
-//       padding: const EdgeInsets.all(20.0),
-//       child: Text('${appState.favorites.length} favorites:'),
-//     ),
-//     for (var pair in appState.favorites)
-//       ListTile(
-//         leading: Icon(Icons.favorite),
-//         title: Text(pair.asLowerCase),
-//       ),
-//   ],
-//Pictionary upload requests
-// );
-
-class Upload extends StatelessWidget {
-  String def = 'no definition';
-  String source =
-      'https://t4.ftcdn.net/jpg/03/16/68/69/360_F_316686992_OvCTP1wfazJhBeMrBBDUGooufSmj2O8G.jpg';
-
-  // Upload({required def, required source});
 // }
 
-// class PicPrev extends Upload {
-// PicPrev({required super.def, required super.source});
+class Upload extends StatefulWidget {
+  final String english;
+  final String kinyar;
+  final String source;
+  late bool showOptions = false;
+
+  Upload({
+    required this.english,
+    required this.kinyar,
+    required this.source,
+  });
+
+  @override
+  _UploadState createState() => _UploadState();
+}
+
+class _UploadState extends State<Upload> {
+  // bool _showOptions = false;
+
+  void toggleOptions() {
+    setState(() {
+      // _showOptions = !_showOptions;
+      widget.showOptions = !widget.showOptions;
+    });
+    print(widget);
+    print(widget.showOptions);
+  }
+
+  void _handleApprove() {
+    print('approved photo');
+    toggleOptions();
+    setState(() {});
+  }
+
+  void _handleReject() {
+    print('rejected photo');
+    toggleOptions();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: 150,
-        height: 150,
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          border: Border.all(),
-        ),
-        child: Image(image: NetworkImage(source)));
+    return GestureDetector(
+      onTap: () => toggleOptions(),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            padding: EdgeInsets.all(5),
+            width: 200,
+            height: 200,
+            decoration: BoxDecoration(
+              color: tileHoverColor,
+              border: Border.all(
+                color: secondaryColor,
+                width: 3,
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Image(image: NetworkImage(widget.source)),
+                Text(
+                  widget.kinyar,
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                Text(
+                  widget.english,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // if (_showOptions)
+          if (widget.showOptions)
+            Container(
+              decoration: BoxDecoration(
+                  color: secondaryColor.withOpacity(.75),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              height: 50,
+              width: 150,
+              alignment: Alignment.center,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    GestureDetector(
+                      onTap: () => _handleApprove(),
+                      child: Icon(
+                        Icons.check_circle,
+                        color: Colors.green,
+                        size: 40,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => _handleReject(),
+                      child: Icon(
+                        Icons.delete_forever_rounded,
+                        color: Colors.red,
+                        size: 40,
+                      ),
+                    ),
+                  ]),
+            ),
+        ],
+      ),
+    );
   }
 }

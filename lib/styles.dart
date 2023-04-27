@@ -10,15 +10,42 @@ const textColor = Color(0xFF3C4046);
 const loginBackgroundColor = Color.fromARGB(255, 200, 200, 200);
 const borderColor = Color.fromARGB(255, 119, 119, 119);
 const whiteColor = Color.fromARGB(255, 255, 255, 255);
-const double defaultPadding = 20.0;
+const double englishaultPadding = 20.0;
+
+String exampleSource =
+    'https://t4.ftcdn.net/jpg/03/16/68/69/360_F_316686992_OvCTP1wfazJhBeMrBBDUGooufSmj2O8G.jpg';
 
 List<Upload> uploads = [
-  Upload(),
-  Upload(),
-  Upload(),
-  Upload(),
-  Upload(),
-  Upload()
+  Upload(
+    english: 'cat',
+    kinyar: 'injangwe',
+    source: exampleSource,
+  ),
+  Upload(
+    english: 'horse',
+    kinyar: 'ifarashi',
+    source: exampleSource,
+  ),
+  Upload(
+    english: 'sky',
+    kinyar: 'ikirere',
+    source: exampleSource,
+  ),
+  Upload(
+    english: 'green',
+    kinyar: 'icyatsi',
+    source: exampleSource,
+  ),
+  Upload(
+    english: 'hello',
+    kinyar: 'muraho',
+    source: exampleSource,
+  ),
+  Upload(
+    english: 'fish',
+    kinyar: 'amafi',
+    source: exampleSource,
+  ),
 ];
 
 List<User> users = [
