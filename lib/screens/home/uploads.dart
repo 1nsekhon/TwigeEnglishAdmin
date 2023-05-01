@@ -12,10 +12,23 @@ class UploadsPage extends StatefulWidget {
 class _UploadsPageState extends State<UploadsPage> {
   @override
   Widget build(BuildContext context) {
-    void uploadTap(int index) {
-      uploads[index].showOptions = !uploads[index].showOptions;
-      print('$index');
-      uploads.removeAt(index);
+    String _english;
+    String _kinyar;
+    int _displayIndex;
+    void seeOptions(int index) {
+      setState(() {
+        uploads[index].showOptions = !uploads[index].showOptions;
+        if (uploads[index].approved == true) {
+          accepted.add(uploads[index]);
+          uploads.removeAt(index);
+        }
+        if (uploads[index].rejected == true) {
+          // print('$index');
+          // if(uploads[index].rejected == true)
+          uploads.removeAt(index);
+        }
+      });
+      print(accepted);
     }
 
     return Scaffold(
@@ -44,7 +57,7 @@ class _UploadsPageState extends State<UploadsPage> {
               final upload = uploads[index];
 
               return GestureDetector(
-                onTap: () => uploadTap(index),
+                onTap: () => seeOptions(index),
                 child: upload,
               );
               // child: Container(
@@ -85,6 +98,8 @@ class Upload extends StatefulWidget {
   final String kinyar;
   final String source;
   late bool showOptions = false;
+  late bool approved = false;
+  late bool rejected = false;
 
   Upload({
     required this.english,
@@ -97,99 +112,105 @@ class Upload extends StatefulWidget {
 }
 
 class _UploadState extends State<Upload> {
-  // bool _showOptions = false;
+  bool approved = false;
 
   void toggleOptions() {
     setState(() {
-      // _showOptions = !_showOptions;
       widget.showOptions = !widget.showOptions;
     });
-    print(widget);
-    print(widget.showOptions);
   }
 
   void _handleApprove() {
     print('approved photo');
     toggleOptions();
-    setState(() {});
+    setState(() {
+      accepted.add(widget);
+      widget.approved = true;
+    });
   }
 
   void _handleReject() {
     print('rejected photo');
     toggleOptions();
-    setState(() {});
+    setState(() {
+      uploads.remove(widget);
+      widget.rejected = true;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => toggleOptions(),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.all(5),
-            width: 200,
-            height: 200,
-            decoration: BoxDecoration(
-              color: tileHoverColor,
-              border: Border.all(
-                color: secondaryColor,
-                width: 3,
+    if (widget.approved == false && widget.rejected == false) {
+      return GestureDetector(
+        onTap: () => toggleOptions(),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              padding: EdgeInsets.all(5),
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                color: tileHoverColor,
+                border: Border.all(
+                  color: secondaryColor,
+                  width: 3,
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Image(image: NetworkImage(widget.source)),
+                  Text(
+                    widget.kinyar,
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  Text(
+                    widget.english,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Image(image: NetworkImage(widget.source)),
-                Text(
-                  widget.kinyar,
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-                Text(
-                  widget.english,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // if (_showOptions)
-          if (widget.showOptions)
-            Container(
-              decoration: BoxDecoration(
-                  color: secondaryColor.withOpacity(.75),
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              height: 50,
-              width: 150,
-              alignment: Alignment.center,
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    GestureDetector(
-                      onTap: () => _handleApprove(),
-                      child: Icon(
-                        Icons.check_circle,
-                        color: Colors.green,
-                        size: 40,
+            if (widget.showOptions)
+              Container(
+                decoration: BoxDecoration(
+                    color: secondaryColor.withOpacity(.75),
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                height: 50,
+                width: 150,
+                alignment: Alignment.center,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      GestureDetector(
+                        onTap: () => _handleApprove(),
+                        child: Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                          size: 40,
+                        ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () => _handleReject(),
-                      child: Icon(
-                        Icons.delete_forever_rounded,
-                        color: Colors.red,
-                        size: 40,
+                      GestureDetector(
+                        onTap: () => _handleReject(),
+                        child: Icon(
+                          Icons.delete_forever_rounded,
+                          color: Colors.red,
+                          size: 40,
+                        ),
                       ),
-                    ),
-                  ]),
-            ),
-        ],
-      ),
-    );
+                    ]),
+              ),
+          ],
+        ),
+      );
+    } else {
+      return SizedBox();
+    }
   }
 }

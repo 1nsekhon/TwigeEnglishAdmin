@@ -13,15 +13,6 @@ class _UsersPageState extends State<UsersPage> {
   String _displayName = 'No user chosen';
   int _displayNum = 0;
 
-  //example list of users
-  List<User> users = [
-    User(username: 'user1', phone: 111000),
-    User(username: 'user2', phone: 222000),
-    User(username: 'user3', phone: 333000),
-    User(username: 'user4', phone: 444000),
-    User(username: 'user5', phone: 555000),
-  ];
-
   void _toggleOverlay() {
     setState(() {
       _showOverlay = !_showOverlay;

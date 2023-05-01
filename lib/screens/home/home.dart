@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twige/screens/home/uploads.dart';
 import 'package:twige/screens/home/users.dart';
+import 'package:twige/screens/home/approved.dart';
+import 'package:twige/screens/home/usersPage.dart';
 import 'package:english_words/english_words.dart';
 import 'package:twige/styles.dart';
 
@@ -24,7 +26,13 @@ class _MyHomePageState extends State<MyHomePage> {
         page = UploadsPage();
         break;
       case 2:
+        page = ApprovedPage();
+        break;
+      case 3:
         page = UserManagement();
+        break;
+      case 4:
+        page = UsersPage();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -70,7 +78,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   NavigationRailDestination(
                     icon: Icon(Icons.menu_book_rounded),
                     label: Text(
-                      'Uploads',
+                      'Pending Uploads',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.thumb_up_alt_sharp),
+                    label: Text(
+                      'Approved Uploads',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -80,6 +97,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     icon: Icon(Icons.person_rounded),
                     label: Text(
                       'User Management',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.person_rounded),
+                    label: Text(
+                      'Users II',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),

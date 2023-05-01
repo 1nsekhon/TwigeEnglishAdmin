@@ -10,6 +10,7 @@ class _UserManagementState extends State<UserManagement> {
   bool _showOverlay = false;
   String _displayName = 'No user chosen';
   int _displayNum = 0;
+  int _displayPoints = 0;
   int _displayIndex = 0;
 
   //example list of users
@@ -31,7 +32,9 @@ class _UserManagementState extends State<UserManagement> {
     setState(() {
       _displayIndex = index;
       _displayName = users[index].username;
+      _displayPoints = users[index].points;
       _displayNum = users[index].phone;
+
       _toggleOverlay();
     });
   }
@@ -97,8 +100,9 @@ class _UserManagementState extends State<UserManagement> {
 class User {
   String username;
   int phone;
+  int points = 0;
 
-  User({required this.username, required this.phone});
+  User({required this.username, required this.phone, points});
 
   String name() {
     return username;
@@ -113,21 +117,18 @@ class UserInfo extends StatelessWidget {
   // User person;
   String name;
   int num;
+  int points;
 
-  UserInfo({required this.name, required this.num});
+  UserInfo({required this.name, required this.num, this.points = 0});
 
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //     body: Center(
-    //   child: Text('$name, $num'),
-    // ));
     return Container(
         alignment: Alignment.center,
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text(
-            '$name, $num',
+            '$name, $num, $points',
           ),
           const Icon(Icons.delete),
         ]));

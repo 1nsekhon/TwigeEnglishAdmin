@@ -48,6 +48,8 @@ List<Upload> uploads = [
   ),
 ];
 
+List<Upload> accepted = [];
+
 List<User> users = [
   User(username: 'user#1', phone: 111000),
   User(username: 'user2', phone: 222000),
