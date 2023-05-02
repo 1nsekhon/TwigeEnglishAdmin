@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:twige/services/database_manager.dart';
 import 'package:twige/styles.dart';
+import '../../models/firebase_file.dart';
+import '../../widgets/upload.dart';
 
 bool showDets = false;
 
@@ -9,6 +12,18 @@ class UploadsPage extends StatefulWidget {
 }
 
 class _UploadsPageState extends State<UploadsPage> {
+
+  late Future<List<FirebaseFile>> futureFiles;
+
+  @override
+
+  void initState() {
+    super.initState();
+
+    futureFiles = FirebaseApi.listAllApproved();
+  }
+
+  @override
   bool _showOverlay = false;
   String _english = 'default english';
   String _kinyar = 'default kinyar';
@@ -71,47 +86,52 @@ class _UploadsPageState extends State<UploadsPage> {
       ),
       body: Stack(
         children: [
-          LayoutBuilder(builder: (context, constraints) {
-            return GridView.builder(
-              // primary: false,
-              padding: const EdgeInsets.fromLTRB(40, 20, 20, 0),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                crossAxisCount: constraints.maxWidth > 700 ? 4 : 2,
-              ),
-              itemCount: uploads.length,
-              itemBuilder: (context, index) {
-                final upload = uploads[index];
+          FutureBuilder(
+          future:futureFiles,
+          builder: (context, snapshot){
+            if(snapshot.hasError) {
+              return const Center(child: Text('error has occured'));
+            } 
 
-                return GestureDetector(
-                  onTap: () => seeOptions(index),
-                  child: upload,
-                );
-                // child: Container(
-                //   width: 100,
-                //   height: 100,
-                //   color: whiteColor,
-                // ));
-
-                //       toggleApprove
-                //           ? Container(
-                //               height: 50,
-                //               width: 150,
-                //               alignment: Alignment.center,
-                //               color: secondaryColor.withOpacity(.70),
-                //               child: Row(
-                //                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //                   children: [
-                //                     Icon(Icons.check_circle),
-                //                     Icon(Icons.delete_forever_rounded),
-                //                   ]))
-                //           : SizedBox(),
-                //     ],
-                //   ),
-                // );
-              },
-            );
+            else if(snapshot.hasData) {
+              final files = snapshot.data!;
+              
+                return LayoutBuilder(builder: (context, constraints) {
+                  return GridView.builder(
+                  // primary: false,
+              
+                  padding: const EdgeInsets.fromLTRB(40, 20, 20, 0),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  crossAxisCount: constraints.maxWidth > 700 ? 4 : 2,
+                  ),
+                  itemCount:files.length,
+                  itemBuilder: (context, index) {
+                  final file = files[index];
+                
+                  // ADD THESE ONCE CUSTOM METADATA IS ADDED
+                 //final uenglish = getEnglish(file);
+                 //final ukinyar = getKinyar(file);
+                  final uploadItem = 
+                  Upload(
+                  // ADD THESE ONCE CUSTOM METADATA IS ADDED
+                  //english: uenglish, //filename which can also be the name of the item 
+                  //kinyar: ukinyar,
+                   english: 'sampleEnglish',
+                   kinyar: 'sampleKinyar',
+                   source: file.url
+                 );
+                
+                    return GestureDetector(
+                    onTap: () => seeOptions(index), // possibly not neccesary
+                    child: uploadItem,
+                   );
+                 },
+                 );
+                });
+            }
+            return const Center(child: CircularProgressIndicator());
           }),
           if (_showOverlay)
             Center(
