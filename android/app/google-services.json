@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "472741962249",
+    "project_id": "seniordesign-99fb8",
+    "storage_bucket": "seniordesign-99fb8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:472741962249:android:84a74febf78a83407a0ed8",
+        "android_client_info": {
+          "package_name": "com.example.twige"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "472741962249-clme2dg356mqvmmuu6t6b6bn4ncakap9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoO5RL7cslYwoIfxgMrWKA2_dOprMzVD4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "472741962249-clme2dg356mqvmmuu6t6b6bn4ncakap9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "472741962249-17gueqat19v2saa2pmu6fkp7s5a74anb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.twingeEnglishV1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:472741962249:android:51605083ff1290617a0ed8",
+        "android_client_info": {
+          "package_name": "com.example.twinge_english_v1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "472741962249-clme2dg356mqvmmuu6t6b6bn4ncakap9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoO5RL7cslYwoIfxgMrWKA2_dOprMzVD4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "472741962249-clme2dg356mqvmmuu6t6b6bn4ncakap9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "472741962249-17gueqat19v2saa2pmu6fkp7s5a74anb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.twingeEnglishV1"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
