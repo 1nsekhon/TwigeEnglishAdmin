@@ -231,7 +231,7 @@ class MainPage extends StatelessWidget {
               child: Container(
                   color: secondaryColor,
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(60, 30, 60, 60),
+                    padding: EdgeInsets.fromLTRB(60, 20, 60, 60),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -241,11 +241,12 @@ class MainPage extends StatelessWidget {
                               color: whiteColor,
                             )),
                         SizedBox(
-                          height: 30,
+                          height: 20,
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
+                            if (uploads.isEmpty) Text('No pending uploads'),
                             if (uploads.isNotEmpty)
                               Container(
                                 height: 150,
@@ -270,7 +271,7 @@ class MainPage extends StatelessWidget {
                           ],
                         ),
                         Container(
-                          height: 30,
+                          height: 20,
                         ),
                         Text('Accepted Uploads...',
                             style: const TextStyle(
@@ -278,7 +279,7 @@ class MainPage extends StatelessWidget {
                               color: whiteColor,
                             )),
                         SizedBox(
-                          height: 30,
+                          height: 20,
                         ),
                         if (accepted.isNotEmpty)
                           Row(
@@ -288,19 +289,22 @@ class MainPage extends StatelessWidget {
                                 Container(
                                   height: 150,
                                   width: 150,
+                                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                                   child: accepted[0],
                                 ),
                               if (accepted.length >= 2)
                                 Container(
                                   height: 150,
                                   width: 150,
-                                  child: accepted[0],
+                                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                  child: accepted[1],
                                 ),
                               if (accepted.length >= 3)
                                 Container(
                                   height: 150,
                                   width: 150,
-                                  child: accepted[0],
+                                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                  child: accepted[2],
                                 ),
                             ],
                           ),
