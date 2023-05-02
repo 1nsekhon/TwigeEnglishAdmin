@@ -100,17 +100,72 @@ class _UserManagementState extends State<UserManagement> {
         if (_showOverlay)
           GestureDetector(
             onTap: _toggleOverlay,
-            child: Container(
-              height: 30,
-              color: Colors.black54,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text('$_displayName, $_displayNum, $_displayPoints'),
-                  GestureDetector(
-                      onTap: () => deleteUser(), child: Icon(Icons.delete)),
-                ],
-              ),
+            child: Center(
+              child: Column(children: [
+                SizedBox(height: 30),
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 10, 10, 20),
+                  height: 110,
+                  width: 500,
+                  decoration: BoxDecoration(
+                    color: secondaryColor.withOpacity(.85),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Text(
+                      //   'User Information:',
+                      //   style: TextStyle(
+                      //     color: whiteColor,
+                      //     fontWeight: FontWeight.bold,
+                      //     fontSize: 25,
+                      //   ),
+                      // ),
+                      // SizedBox(
+                      //   height: 30,
+                      // ),
+                      Container(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                                    color: tileHoverColor, width: 1.5))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Username', style: TextThemes.infoHeader),
+                            Text('Phone Number', style: TextThemes.infoHeader),
+                            Text('Points', style: TextThemes.infoHeader),
+                            Container(),
+                          ],
+                        ),
+                      ),
+
+                      Container(
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(_displayName, style: TextThemes.infoStyle),
+                            Text('$_displayNum', style: TextThemes.infoStyle),
+                            Text('$_displayPoints',
+                                style: TextThemes.infoStyle),
+                            GestureDetector(
+                              onTap: () => deleteUser(),
+                              child: Icon(
+                                color: whiteColor,
+                                Icons.delete,
+                                size: 25,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ]),
             ),
           ),
         if (_showAdd)

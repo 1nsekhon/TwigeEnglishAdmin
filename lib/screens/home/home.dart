@@ -180,7 +180,7 @@ class MainPage extends StatelessWidget {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(60, 30, 0, 0),
+            padding: const EdgeInsets.fromLTRB(60, 30, 0, 30),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -223,7 +223,6 @@ class MainPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 100),
               ],
             ),
           ),
@@ -247,13 +246,64 @@ class MainPage extends StatelessWidget {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            uploads[0],
-                            SizedBox(width: 20),
-                            uploads[1],
-                            SizedBox(width: 20),
-                            uploads[2],
+                            if (uploads.isNotEmpty)
+                              Container(
+                                height: 150,
+                                width: 150,
+                                padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                child: uploads[0],
+                              ),
+                            if (uploads.length >= 2)
+                              Container(
+                                height: 150,
+                                width: 150,
+                                padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                child: uploads[1],
+                              ),
+                            if (uploads.length >= 3)
+                              Container(
+                                height: 150,
+                                width: 150,
+                                padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                child: uploads[2],
+                              ),
                           ],
                         ),
+                        Container(
+                          height: 30,
+                        ),
+                        Text('Accepted Uploads...',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: whiteColor,
+                            )),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        if (accepted.isNotEmpty)
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              if (accepted.isNotEmpty)
+                                Container(
+                                  height: 150,
+                                  width: 150,
+                                  child: accepted[0],
+                                ),
+                              if (accepted.length >= 2)
+                                Container(
+                                  height: 150,
+                                  width: 150,
+                                  child: accepted[0],
+                                ),
+                              if (accepted.length >= 3)
+                                Container(
+                                  height: 150,
+                                  width: 150,
+                                  child: accepted[0],
+                                ),
+                            ],
+                          ),
                       ],
                     ),
                   )),

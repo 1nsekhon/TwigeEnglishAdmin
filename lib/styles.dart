@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/home/uploads.dart';
+import 'package:twige/widgets/upload.dart';
 import 'package:twige/screens/home/users.dart';
 
 const primaryColor = Color.fromARGB(255, 129, 171, 119);
@@ -57,3 +57,15 @@ List<User> users = [
   User(username: 'user4', phone: 444000),
   User(username: 'user5', phone: 555000),
 ];
+
+abstract class TextThemes {
+  static const TextStyle infoHeader = TextStyle(
+    color: whiteColor,
+    fontWeight: FontWeight.bold,
+    fontSize: 20,
+  );
+  static const TextStyle infoStyle = TextStyle(
+    color: whiteColor,
+    fontSize: 20,
+  );
+}
