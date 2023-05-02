@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:twige/styles.dart';
 
@@ -12,6 +14,8 @@ class _UserManagementState extends State<UserManagement> {
   int _displayNum = 0;
   int _displayPoints = 0;
   int _displayIndex = 0;
+
+  bool _showAdd = false;
 
   //example list of users
   // List<User> users = [
@@ -46,6 +50,14 @@ class _UserManagementState extends State<UserManagement> {
     });
   }
 
+  void toggleAdd() {
+    setState(() {
+      _showAdd = !_showAdd;
+    });
+  }
+
+  void submitUser() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,6 +71,15 @@ class _UserManagementState extends State<UserManagement> {
               fontWeight: FontWeight.bold,
               color: whiteColor,
             )),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: whiteColor,
+        child: Icon(
+          Icons.person_add,
+          color: secondaryColor,
+        ),
+        onPressed: () => toggleAdd(),
       ),
       body: Stack(children: [
         // user list
@@ -85,13 +106,57 @@ class _UserManagementState extends State<UserManagement> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text('$_displayName, $_displayNum'),
+                  Text('$_displayName, $_displayNum, $_displayPoints'),
                   GestureDetector(
                       onTap: () => deleteUser(), child: Icon(Icons.delete)),
                 ],
               ),
             ),
           ),
+        if (_showAdd)
+          Center(
+            child: Column(children: [
+              SizedBox(height: 30),
+              Container(
+                padding: EdgeInsets.all(30),
+                decoration: BoxDecoration(
+                  color: whiteColor.withOpacity(.75),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                height: 300,
+                width: 400,
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                          onTap: () => toggleAdd(),
+                          child: Icon(Icons.close_rounded))
+                    ],
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Username',
+                    ),
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Phone Number',
+                    ),
+                  ),
+                  SizedBox(height: 40),
+                  ElevatedButton(
+                    // style: ButtonStyle(backgroundColor: ),
+                    onPressed: () => submitUser(),
+                    child: Text(
+                      'Add User',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ]),
+              )
+            ]),
+          )
       ]),
     );
   }
