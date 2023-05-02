@@ -5,8 +5,6 @@ class Upload extends StatefulWidget {
   final String english;
   final String kinyar;
   final String source;
-  late bool approved = false;
-  late bool rejected = false;
 
   Upload({
     required this.english,
@@ -23,8 +21,6 @@ class _UploadState extends State<Upload> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(5),
-      // width: 150,
-      // height: 150,
       decoration: BoxDecoration(
         color: tileHoverColor,
         border: Border.all(
@@ -35,7 +31,7 @@ class _UploadState extends State<Upload> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Image(image: NetworkImage(widget.source)),
+          Image(fit: BoxFit.fill, image: NetworkImage(widget.source)),
           Text(
             widget.kinyar,
             style: TextStyle(
