@@ -92,22 +92,16 @@ static Future<ListResult> listAllApprovedReferences() async {
     final uploadRef = storageRef.child("unapproved_photos/${ref.name}");
     print(uploadRef.fullPath);
     try {
-      /*const oneMegabyte = 1024 * 1024;
-      final Uint8List? data = await uploadRef.getData(oneMegabyte);
-     if (data == null) {
-      throw Exception("Failed to download file");
-    }
      
-      File file = File.fromRawPath(data!);
-      return file;
-      */
+      const oneMegabyte = 1024 * 1024;
+      final Uint8List? data = await uploadRef.getData(oneMegabyte);
+      if (data == null) {
+        throw Exception("Failed to download file");
+      }
+     
+      return data;
+      
 
-      final dir = await getApplicationDocumentsDirectory();
-      final file = File("${dir.path}/${uploadRef.name}");
-
-      await ref.writeToFile(file);
-
-      return file;
     } on FirebaseException catch (e) {
      print("Error downloading file: ${e.toString()}");
     // Handle any errors.
@@ -117,12 +111,13 @@ static Future<ListResult> listAllApprovedReferences() async {
 
   }
 
-   static Future uploadMem(Reference ref, File file) async {
+   static Future uploadMem(Reference ref, Uint8List stream) async {
     
     final storageRef = FirebaseStorage.instance.ref();
     final uploadRef = storageRef.child("approved_photos/${ref.name}");
 
-    //File file = File.fromRawPath(data);
+    
+    File file = File.fromRawPath(rawPath);
 
     try {
       // Upload raw data.
@@ -136,9 +131,9 @@ static Future<ListResult> listAllApprovedReferences() async {
   static Future move(Reference ref) async{
     
     //download to mem
-    File file = await downloadMem(ref);
+    Uint8List stream = await downloadMem(ref);
     //upload from mem to firebase
-    await uploadMem(ref, file);
+    await uploadMem(ref, stream);
   }
     
 }
