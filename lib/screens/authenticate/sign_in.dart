@@ -1,9 +1,13 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:twige/services/auth.dart';
 
-class SignIn extends StatefulWidget {
+final databaseReference = FirebaseDatabase.instance.reference();
+TextEditingController emailController = TextEditingController();
+TextEditingController passController = TextEditingController();
 
+class SignIn extends StatefulWidget {
   final Function toggleView;
   SignIn({required this.toggleView});
 
@@ -12,24 +16,22 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
- @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
-    
-            return LoginDesktop(toggleView: widget.toggleView);
-          
+          return LoginDesktop(toggleView: widget.toggleView);
         },
       ),
     );
   }
 }
-class LoginDesktop extends StatefulWidget {
 
+class LoginDesktop extends StatefulWidget {
   final Function toggleView;
   LoginDesktop({required this.toggleView});
-  
+
   @override
   State<LoginDesktop> createState() => _LoginDesktopState();
 }
@@ -41,15 +43,16 @@ class _LoginDesktopState extends State<LoginDesktop> {
 
   //text field state
   String email = '';
-  //password field state 
+  //password field state
   String password = '';
 
   @override
   Widget build(BuildContext context) {
-    
     return Row(
       children: [
-        Expanded(child: Image.asset('assets/images/sheerlove.png', fit: BoxFit.cover)),
+        Expanded(
+            child:
+                Image.asset('assets/images/sheerlove.png', fit: BoxFit.cover)),
         Expanded(
           child: Container(
             constraints: const BoxConstraints(maxWidth: 21),
@@ -76,59 +79,56 @@ class _LoginDesktopState extends State<LoginDesktop> {
                 ),
                 const SizedBox(height: 35),
                 TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'abc@example.com',
-                    labelStyle: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 1,
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      hintText: 'abc@example.com',
+                      labelStyle: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey,
+                          width: 1,
+                        ),
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey,
+                          width: 1,
+                        ),
                       ),
                     ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                  onChanged : (val){
-                    setState(() => email = val);
-                    
-                  }
-                ),
+                    onChanged: (val) {
+                      setState(() => email = val);
+                    }),
                 const SizedBox(height: 20),
                 TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    hintText: '********',
-                    labelStyle: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 1,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      hintText: '********',
+                      labelStyle: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey,
+                          width: 1,
+                        ),
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey,
+                          width: 1,
+                        ),
                       ),
                     ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                  onChanged : (val){
-                    setState(() => email = val);
-                    
-                  }
-                ),
+                    onChanged: (val) {
+                      setState(() => email = val);
+                    }),
                 const SizedBox(height: 25),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -168,8 +168,10 @@ class _LoginDesktopState extends State<LoginDesktop> {
                 const SizedBox(height: 30),
                 TextButton(
                   onPressed: () async {
-                    print(email);
-                    print(password);
+                    //print(email);
+                    //print(password);
+                    saveEmail(emailController.text);
+                    print("is this here?");
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.green,
@@ -187,7 +189,6 @@ class _LoginDesktopState extends State<LoginDesktop> {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 35),
                 TextButton(
                   onPressed: () {
@@ -209,9 +210,6 @@ class _LoginDesktopState extends State<LoginDesktop> {
                     ),
                   ),
                 ),
-
-                
-                
               ],
             ),
           ),
@@ -223,6 +221,16 @@ class _LoginDesktopState extends State<LoginDesktop> {
   void onChanged(bool? value) {
     setState(() {
       _isChecked = value!;
+    });
+  }
+
+  void saveEmail(String email) {
+    databaseReference.child("users").push().set({
+      'email': email,
+    }).then((value) {
+      print("Email saved successfully");
+    }).catchError((error) {
+      print("Failed to save email: $error");
     });
   }
 }

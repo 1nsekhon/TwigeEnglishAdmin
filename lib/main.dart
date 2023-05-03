@@ -2,12 +2,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twige/screens/authenticate/authenticate.dart';
+import 'package:twige/screens/authenticate/register.dart';
+import 'package:twige/screens/authenticate/sign_in.dart';
 import 'package:twige/screens/home/home.dart';
 import 'package:twige/screens/wrapper.dart';
 import 'package:twige/styles.dart';
 import 'firebase_options.dart';
+import 'screens/authenticate/sign_in.dart';
 
-void main()  async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -29,7 +32,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
         ),
         // home: Wrapper(),
-        home: MyHomePage(),
+        //home: MyHomePage(),
+        home: Reg(toggleView: () {}),
       ),
     );
   }
