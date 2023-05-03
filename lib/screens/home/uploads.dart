@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:twige/services/database_manager.dart';
 import 'package:twige/styles.dart';
@@ -14,16 +15,19 @@ class UploadsPage extends StatefulWidget {
 class _UploadsPageState extends State<UploadsPage> {
 
   late Future<List<FirebaseFile>> futureFiles;
+  var files;
 
   @override
 
   void initState() {
     super.initState();
 
-    futureFiles = FirebaseApi.listAllApproved();
+    futureFiles = FirebaseApi.listAllUnapproved();
   }
 
   @override
+  
+
   bool _showOverlay = false;
   String _english = 'default english';
   String _kinyar = 'default kinyar';
@@ -40,9 +44,12 @@ class _UploadsPageState extends State<UploadsPage> {
     toggleOverlay();
     setState(() {
       _displayIndex = index;
-      _english = uploads[index].english;
-      _kinyar = uploads[index].kinyar;
-      _source = uploads[index].source;
+      // ADD THESE ONCE CUSTOM METADATA IS ADDED
+      //final uenglish = getEnglish(file);
+      //final ukinyar = getKinyar(file);
+      _source = files[index].url;
+      _english = 'default english';
+      _kinyar = 'default kinyar';
       // if (uploads[index].approved == true) {
       //   accepted.add(uploads[index]);
       //   uploads.removeAt(index);
@@ -55,18 +62,35 @@ class _UploadsPageState extends State<UploadsPage> {
     // print(accepted);
   }
 
+  
+
   void _approve() {
     toggleOverlay();
+    
+    /* 
+    MOVE FUNCTION 
+    downloads from firebase
+    uploads to firebase
+    deletes locally stored photo 
+    */
+    Reference ref = FirebaseStorage.instance.refFromURL(files[_displayIndex].url);
+    FirebaseApi.move(ref);
+
+    // deletes from firebase
+    FirebaseStorage.instance.refFromURL(files[_displayIndex].url).delete(); 
+    
     super.setState(() {
-      accepted.add(uploads[_displayIndex]);
-      uploads.removeAt(_displayIndex);
+      
+      files.removeAt(_displayIndex);
     });
   }
 
   void _reject() {
     toggleOverlay();
+    FirebaseStorage.instance.refFromURL(files[_displayIndex].url).delete(); // deletes from firebase
+
     super.setState(() {
-      uploads.removeAt(_displayIndex);
+      files.removeAt(_displayIndex);
     });
   }
 
@@ -94,7 +118,7 @@ class _UploadsPageState extends State<UploadsPage> {
             } 
 
             else if(snapshot.hasData) {
-              final files = snapshot.data!;
+               files = snapshot.data!;
               
                 return LayoutBuilder(builder: (context, constraints) {
                   return GridView.builder(
@@ -108,7 +132,7 @@ class _UploadsPageState extends State<UploadsPage> {
                   ),
                   itemCount:files.length,
                   itemBuilder: (context, index) {
-                  final file = files[index];
+                  final file = files[index]; // this contains object that contains url to source
                 
                   // ADD THESE ONCE CUSTOM METADATA IS ADDED
                  //final uenglish = getEnglish(file);
