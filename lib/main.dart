@@ -7,7 +7,7 @@ import 'package:twige/styles.dart';
 import 'firebase_options.dart';
 import 'package:universal_io/io.dart';
 
-Future<void> main()  async{
+Future<void> main() async {
   final httpClient = HttpClient();
   final request = await httpClient.getUrl(Uri.parse("http://google.com"));
   final response = await request.close();
@@ -16,8 +16,7 @@ Future<void> main()  async{
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  
-  
+
   runApp(MyApp());
 }
 
@@ -34,8 +33,8 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
         ),
-        // home: Wrapper(),
-        home: MyHomePage(),
+        home: Wrapper(),
+        //home: MyHomePage(),
       ),
     );
   }
