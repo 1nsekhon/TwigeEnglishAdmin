@@ -51,11 +51,11 @@ List<Upload> uploads = [
 List<Upload> accepted = [];
 
 List<User> users = [
-  User(username: 'user#1', phone: 111000),
-  User(username: 'user2', phone: 222000),
-  User(username: 'user3', phone: 333000),
-  User(username: 'user4', phone: 444000),
-  User(username: 'user5', phone: 555000),
+  User(username: 'Dan', phone: 111000),
+  User(username: 'Ben', phone: 222000),
+  User(username: 'Candace', phone: 333000),
+  User(username: 'Barry', phone: 444000),
+  User(username: 'Gladys', phone: 555000),
 ];
 
 abstract class TextThemes {
