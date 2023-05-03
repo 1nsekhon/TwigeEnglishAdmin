@@ -1,10 +1,10 @@
 
-import 'package:universal_io/io.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:twige/models/firebase_file.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:universal_io/io.dart';
 
 class FirebaseApi {
   static Future<List<String>> _getDownloadLinks(List<Reference> refs) =>
@@ -88,17 +88,17 @@ static Future<ListResult> listAllApprovedReferences() async {
   }
 
    static Future downloadMem(Reference ref) async {
-    final storageRef = FirebaseStorage.instance.ref(); //to be extra sure
-    final uploadRef = storageRef.child("unapproved_photos/${ref.name}");
-    print(uploadRef.fullPath);
+    //final storageRef = FirebaseStorage.instance.ref(); //to be extra sure
+    //final uploadRef = storageRef.child("unapproved_photos/${ref.name}");
+    //print(uploadRef.fullPath);
     try {
      
       const oneMegabyte = 1024 * 1024;
-      final Uint8List? data = await uploadRef.getData(oneMegabyte);
+      final Uint8List? data = await ref.getData(oneMegabyte);
       if (data == null) {
         throw Exception("Failed to download file");
       }
-     
+     print(data.toString());
       return data;
       
 
@@ -116,12 +116,12 @@ static Future<ListResult> listAllApprovedReferences() async {
     final storageRef = FirebaseStorage.instance.ref();
     final uploadRef = storageRef.child("approved_photos/${ref.name}");
 
-    
-    File file = File.fromRawPath(rawPath);
+
+    //File file = File.fromRawPath(stream);
 
     try {
       // Upload raw data.
-      await uploadRef.putFile(file);
+      await uploadRef.putData(stream);
     } on FirebaseException catch (e) {
       // ...
     }

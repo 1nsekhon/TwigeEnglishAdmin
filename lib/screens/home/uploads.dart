@@ -64,7 +64,7 @@ class _UploadsPageState extends State<UploadsPage> {
 
   
 
-  void _approve() {
+  void _approve() async{
     toggleOverlay();
     
     /* 
@@ -74,7 +74,7 @@ class _UploadsPageState extends State<UploadsPage> {
     deletes locally stored photo 
     */
     Reference ref = FirebaseStorage.instance.refFromURL(files[_displayIndex].url);
-    FirebaseApi.move(ref);
+    await FirebaseApi.move(ref);
 
     // deletes from firebase
     FirebaseStorage.instance.refFromURL(files[_displayIndex].url).delete(); 
