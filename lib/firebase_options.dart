@@ -67,7 +67,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '472741962249',
     projectId: 'seniordesign-99fb8',
     storageBucket: 'seniordesign-99fb8.appspot.com',
-    iosClientId: '472741962249-e7b0eo2ccg8blbqr8k3ns4m1r8ju9c0k.apps.googleusercontent.com',
+    iosClientId:
+        '472741962249-e7b0eo2ccg8blbqr8k3ns4m1r8ju9c0k.apps.googleusercontent.com',
     iosBundleId: 'com.example.twige',
   );
 
@@ -77,7 +78,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '472741962249',
     projectId: 'seniordesign-99fb8',
     storageBucket: 'seniordesign-99fb8.appspot.com',
-    iosClientId: '472741962249-e7b0eo2ccg8blbqr8k3ns4m1r8ju9c0k.apps.googleusercontent.com',
+    iosClientId:
+        '472741962249-e7b0eo2ccg8blbqr8k3ns4m1r8ju9c0k.apps.googleusercontent.com',
     iosBundleId: 'com.example.twige',
   );
 }

@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twige/screens/home/uploads.dart';
@@ -57,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   textDirection: TextDirection.ltr,
                   textAlign: TextAlign.start,
                   style: TextStyle(fontWeight: FontWeight.bold),
-                )
+                ),
               ],
             )),
         body: Row(
@@ -177,6 +179,29 @@ class MainPage extends StatelessWidget {
               color: whiteColor,
             ),
           )),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButton: SizedBox(
+        height: 40,
+        width: 130,
+        child: FloatingActionButton(
+          backgroundColor: whiteColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.logout_rounded,
+                color: secondaryColor,
+              ),
+              Text(
+                '   Logout',
+                style: TextStyle(
+                    color: secondaryColor, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          onPressed: () => {},
+        ),
+      ),
       body: LayoutBuilder(builder: (context, constraints) {
         return Column(
           children: [

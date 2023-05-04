@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:twige/main.dart';
 import 'package:twige/styles.dart';
 
 class UserManagement extends StatefulWidget {
@@ -77,13 +78,27 @@ class _UserManagementState extends State<UserManagement> {
             )),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: whiteColor,
-        child: Icon(
-          Icons.person_add,
-          color: secondaryColor,
+      floatingActionButton: SizedBox(
+        height: 40,
+        width: 130,
+        child: FloatingActionButton(
+          backgroundColor: whiteColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.person_add,
+                color: secondaryColor,
+              ),
+              Text(
+                '   Add User',
+                style: TextStyle(
+                    color: secondaryColor, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          onPressed: () => toggleAdd(),
         ),
-        onPressed: () => toggleAdd(),
       ),
       body: Stack(children: [
         // user list
