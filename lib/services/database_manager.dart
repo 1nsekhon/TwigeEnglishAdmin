@@ -1,9 +1,10 @@
 
-import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:twige/models/firebase_file.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:universal_io/io.dart';
 
 class FirebaseApi {
   static Future<List<String>> _getDownloadLinks(List<Reference> refs) =>
@@ -65,5 +66,75 @@ static Future<ListResult> listAllApprovedReferences() async {
 
     await ref.writeToFile(file);
   }
+
+  static Future deleteFile(Reference ref) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/${ref.name}');
+    
+    await file.delete();
+ }
+
+  static Future uploadFile(Reference ref) async {
+    //form local , path to object
+      final dir = await getApplicationDocumentsDirectory();
+      final file = File('${dir.path}/${ref.name}');
+
+    //where to download in firebase?
+    final path = 'approved_photos/${ref.name}';
+
+    final refFinal = FirebaseStorage.instance.ref().child(path);
+    refFinal.putFile(file);
+
+  }
+
+   static Future downloadMem(Reference ref) async {
+    //final storageRef = FirebaseStorage.instance.ref(); //to be extra sure
+    //final uploadRef = storageRef.child("unapproved_photos/${ref.name}");
+    //print(uploadRef.fullPath);
+    try {
+     
+      const oneMegabyte = 1024 * 1024;
+      final Uint8List? data = await ref.getData(oneMegabyte);
+      if (data == null) {
+        throw Exception("Failed to download file");
+      }
+     print(data.toString());
+      return data;
+      
+
+    } on FirebaseException catch (e) {
+     print("Error downloading file: ${e.toString()}");
+    // Handle any errors.
+     throw e;
+      // Handle any errors.
+    }
+
+  }
+
+   static Future uploadMem(Reference ref, Uint8List stream) async {
+    
+    final storageRef = FirebaseStorage.instance.ref();
+    final uploadRef = storageRef.child("approved_photos/${ref.name}");
+
+
+    //File file = File.fromRawPath(stream);
+
+    try {
+      // Upload raw data.
+      await uploadRef.putData(stream);
+    } on FirebaseException catch (e) {
+      // ...
+    }
+
+  }
+
+  static Future move(Reference ref) async{
+    
+    //download to mem
+    Uint8List stream = await downloadMem(ref);
+    //upload from mem to firebase
+    await uploadMem(ref, stream);
+  }
+    
 }
 
