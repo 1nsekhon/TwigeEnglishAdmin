@@ -48,16 +48,9 @@ class _UploadsPageState extends State<UploadsPage> {
       //final uenglish = getEnglish(file);
       //final ukinyar = getKinyar(file);
       _source = files[index].url;
-      _english = 'default english';
-      _kinyar = 'default kinyar';
-      // if (uploads[index].approved == true) {
-      //   accepted.add(uploads[index]);
-      //   uploads.removeAt(index);
-      // }
-      // if (uploads[index].rejected == true) {
-      //   // print('$index');
-      //   uploads.removeAt(index);
-      // }
+      _english = files[index].english ;
+      _kinyar = files[index].kinyar ;
+
     });
     // print(accepted);
   }
@@ -74,7 +67,7 @@ class _UploadsPageState extends State<UploadsPage> {
     deletes locally stored photo 
     */
     Reference ref = FirebaseStorage.instance.refFromURL(files[_displayIndex].url);
-    await FirebaseApi.move(ref);
+    await FirebaseApi.move(ref, files[_displayIndex].english, files[_displayIndex].kinyar);
 
     // deletes from firebase
     FirebaseStorage.instance.refFromURL(files[_displayIndex].url).delete(); 
@@ -142,8 +135,8 @@ class _UploadsPageState extends State<UploadsPage> {
                   // ADD THESE ONCE CUSTOM METADATA IS ADDED
                   //english: uenglish, //filename which can also be the name of the item 
                   //kinyar: ukinyar,
-                   english: 'sampleEnglish',
-                   kinyar: 'sampleKinyar',
+                   english: file.english ,
+                   kinyar: file.kinyar ,
                    source: file.url
                  );
                 

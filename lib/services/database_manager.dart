@@ -10,18 +10,48 @@ class FirebaseApi {
   static Future<List<String>> _getDownloadLinks(List<Reference> refs) =>
       Future.wait(refs.map((ref) => ref.getDownloadURL()).toList());
 
+  static Future<String> _getEnglish(Reference ref) async{
+      final metadata = await ref.getMetadata();
+
+      String english = metadata.customMetadata!['english'] ?? '';
+      return english;
+
+  }
+
+  static Future<String> _getKinyar(Reference ref) async{
+      final metadata = await ref.getMetadata();
+
+      String kinyar = metadata.customMetadata!['kinyar'] ?? '';
+      return kinyar;
+
+  }
+
   static Future<List<FirebaseFile>> listAllApproved() async {
     final ref = FirebaseStorage.instance.ref('approved_photos/');
     final result = await ref.listAll();
 
     final urls = await _getDownloadLinks(result.items);
 
+    List<String> englishh = [];
+    List<String> kinyarr = [];
+
+    for( var items in result.items){
+      englishh.add(await _getEnglish(items));
+      kinyarr.add(await _getKinyar(items));
+    }
+
     return urls
         .asMap()
         .map((index, url) {
           final ref = result.items[index];
           final name = ref.name;
-          final file = FirebaseFile(ref: ref, name: name, url: url);
+          //final english = _getEnglish(ref);
+          //final kinyar = _getKinyar(ref);
+          final english = englishh[index];
+          final kinyar = kinyarr[index];
+
+          final file = FirebaseFile(ref: ref, name: name, url: url, english: english, kinyar: kinyar);
+         
 
           return MapEntry(index, file);
         })
@@ -41,12 +71,26 @@ static Future<ListResult> listAllApprovedReferences() async {
 
     final urls = await _getDownloadLinks(result.items);
 
+    List<String> englishh = [];
+    List<String> kinyarr = [];
+
+    for( var items in result.items){
+      englishh.add(await _getEnglish(items));
+      kinyarr.add(await _getKinyar(items));
+    }
+
     return urls
         .asMap()
         .map((index, url) {
           final ref = result.items[index];
           final name = ref.name;
-          final file = FirebaseFile(ref: ref, name: name, url: url);
+          //final english = _getEnglish(ref);
+          //final kinyar = _getKinyar(ref);
+          final english = englishh[index];
+          final kinyar = kinyarr[index];
+
+          final file = FirebaseFile(ref: ref, name: name, url: url, english: english, kinyar: kinyar);
+         
 
           return MapEntry(index, file);
         })
@@ -111,7 +155,7 @@ static Future<ListResult> listAllApprovedReferences() async {
 
   }
 
-   static Future uploadMem(Reference ref, Uint8List stream) async {
+   static Future uploadMem(Reference ref, Uint8List stream, String english, String kinyar) async {
     
     final storageRef = FirebaseStorage.instance.ref();
     final uploadRef = storageRef.child("approved_photos/${ref.name}");
@@ -121,19 +165,24 @@ static Future<ListResult> listAllApprovedReferences() async {
 
     try {
       // Upload raw data.
-      await uploadRef.putData(stream);
+      await uploadRef.putData(stream, SettableMetadata(
+      customMetadata: {
+        "english": english,
+        "kinyar": kinyar,
+      },
+    ));
     } on FirebaseException catch (e) {
       // ...
     }
 
   }
 
-  static Future move(Reference ref) async{
+  static Future move(Reference ref, String english, String kinyar) async{
     
     //download to mem
     Uint8List stream = await downloadMem(ref);
     //upload from mem to firebase
-    await uploadMem(ref, stream);
+    await uploadMem(ref, stream, english, kinyar);
   }
     
 }

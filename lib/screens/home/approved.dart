@@ -74,8 +74,8 @@ class _ApprovedPageState extends State<ApprovedPage> {
                   // ADD THESE ONCE CUSTOM METADATA IS ADDED
                   //english: uenglish, //filename which can also be the name of the item 
                   //kinyar: ukinyar,
-                   english: 'sampleEnglish',
-                   kinyar: 'sampleKinyar',
+                   english: file.english,
+                   kinyar: file.english,
                    source: file.url
                  );
                 
