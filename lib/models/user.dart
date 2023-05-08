@@ -1,8 +1,8 @@
 class AdminUser {
-  final String? uid; 
+  final String? uid;
   String? email = "";
   bool approved = true;
-  AdminUser({required this.uid})
+  AdminUser({required this.uid});
 }
 
 class StudentUser {
@@ -12,4 +12,3 @@ class StudentUser {
   int points = 0;
   StudentUser({required this.uid});
 }
-
