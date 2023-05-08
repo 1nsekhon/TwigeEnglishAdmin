@@ -6,14 +6,14 @@ class AuthService {
 
   //create user object based on FirebaseUser
   AdminUser? _userFromCredUser(User? user) {
-    return user != null ? AdminUser(uid: user.uid) : null;
+    return user != null ? AdminUser(uid: user.uid) : null; //null if signed out
   }
 
-  //auth changes user stream
+  //auth changes user stream,
+  //returns user object based on user class
+  //null if user signed out
   Stream<AdminUser?> get user {
-    return _auth
-        .authStateChanges()
-        .map((User? user) => _userFromCredUser(user));
+    return _auth.authStateChanges().map(_userFromCredUser);
   }
 
   //sign in with email + pass
