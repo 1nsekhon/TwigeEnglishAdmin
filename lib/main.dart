@@ -30,18 +30,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamProvider<AdminUser?>.value(
-      create: (context) => MyAppState(),
-      value: AuthService().user,
-      initialData: null,
-      builder: (context, child) => MaterialApp(
-        title: 'Twige Admin App',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
-        ),
-        //home: Wrapper(),
-        home: MyHomePage(),
-      ),
-    );
+        value: AuthService().user,
+        initialData: null,
+        builder: (context, child) => ChangeNotifierProvider<MyAppState>(
+              create: (context) => MyAppState(),
+              child: MaterialApp(
+                title: 'Twige Admin App',
+                theme: ThemeData(
+                  useMaterial3: true,
+                  colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
+                ),
+                //home: Wrapper(),
+                home: MyHomePage(),
+              ),
+            ));
   }
 }
