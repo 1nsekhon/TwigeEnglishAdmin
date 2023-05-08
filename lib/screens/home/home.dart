@@ -7,12 +7,16 @@ import 'package:twige/screens/home/users.dart';
 import 'package:twige/screens/home/approved.dart';
 import 'package:twige/screens/home/usersPage.dart';
 import 'package:english_words/english_words.dart';
+import 'package:twige/services/auth.dart';
 import 'package:twige/styles.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
+
+final AuthService _auth = AuthService();
 
 class _MyHomePageState extends State<MyHomePage> {
   var selectedIndex = 2;
@@ -199,7 +203,9 @@ class MainPage extends StatelessWidget {
               ),
             ],
           ),
-          onPressed: () => {},
+          onPressed: () async {
+            await _auth.signingOut();
+          },
         ),
       ),
       body: LayoutBuilder(builder: (context, constraints) {
