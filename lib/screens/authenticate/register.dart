@@ -133,11 +133,14 @@ class _RegisterState extends State<Register> {
                   const SizedBox(height: 25),
                   TextButton(
                     onPressed: () async {
-                      /* print(email);
-                      print(password); */
                       if (_formKey.currentState!.validate()) {
-                        print(email);
-                        print(password);
+                        dynamic result = await _auth
+                            .registerWithEmailAndPassword(email, password);
+                        if (result == null) {
+                          setState(() {
+                            error = 'Please supply a valid email';
+                          });
+                        }
                       }
                     },
                     style: TextButton.styleFrom(
@@ -155,6 +158,11 @@ class _RegisterState extends State<Register> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 12.0),
+                  Text(
+                    error,
+                    style: TextStyle(color: Colors.red, fontSize: 14.0),
                   ),
                   const SizedBox(height: 30),
                   TextButton(
