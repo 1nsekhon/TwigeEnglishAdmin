@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twige/models/user.dart';
@@ -9,14 +8,11 @@ import 'package:twige/services/auth.dart';
 import 'package:twige/styles.dart';
 import 'firebase_options.dart';
 import 'package:universal_io/io.dart';
-import 'package:provider/provider.dart';
-import 'models/user.dart';
 
 Future<void> main() async {
   final httpClient = HttpClient();
   final request = await httpClient.getUrl(Uri.parse("http://google.com"));
   final response = await request.close();
-
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
