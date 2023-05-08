@@ -8,36 +8,32 @@ class Authenticate extends StatefulWidget {
 }
 
 class _AuthenticateState extends State<Authenticate> {
-
   bool showSignIn = true;
-  
-  void toggleView(){
+
+  void toggleView() {
     setState(() => showSignIn = !showSignIn);
   }
 
   @override
   Widget build(BuildContext context) {
-    
-    if(showSignIn){
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: SignIn(toggleView: toggleView)//<--
-    );
-    } else{
+    if (showSignIn) {
       return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: Reg(toggleView: toggleView)//<--
-    );
+          title: 'Sign In Page',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.green,
+          ),
+          home: SignIn(toggleView: toggleView) //<--
+          );
+    } else {
+      return MaterialApp(
+          title: 'Register Page',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.green,
+          ),
+          home: Reg(toggleView: toggleView) //<--
+          );
     }
-
-    
   }
 }

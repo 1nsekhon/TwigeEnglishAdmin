@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:twige/services/auth.dart';
 
+<<<<<<< Updated upstream
 final databaseReference = FirebaseDatabase.instance.reference();
 TextEditingController emailController = TextEditingController();
 TextEditingController passController = TextEditingController();
 
+=======
+>>>>>>> Stashed changes
 class SignIn extends StatefulWidget {
   final Function toggleView;
   SignIn({required this.toggleView});
@@ -39,7 +42,9 @@ class LoginDesktop extends StatefulWidget {
 class _LoginDesktopState extends State<LoginDesktop> {
   bool _isChecked = false;
 
-  //final AuthService _auth = AuthService();
+  final AuthService _auth = AuthService();
+  String error = '';
+  final _formKey = GlobalKey<FormState>();
 
   //text field state
   String email = '';
@@ -78,8 +83,12 @@ class _LoginDesktopState extends State<LoginDesktop> {
                   ),
                 ),
                 const SizedBox(height: 35),
+<<<<<<< Updated upstream
                 TextField(
                     controller: emailController,
+=======
+                TextFormField(
+>>>>>>> Stashed changes
                     decoration: InputDecoration(
                       labelText: 'Email',
                       hintText: 'abc@example.com',
@@ -127,7 +136,11 @@ class _LoginDesktopState extends State<LoginDesktop> {
                       ),
                     ),
                     onChanged: (val) {
+<<<<<<< Updated upstream
                       setState(() => email = val);
+=======
+                      setState(() => password = val);
+>>>>>>> Stashed changes
                     }),
                 const SizedBox(height: 25),
                 Row(
@@ -223,6 +236,7 @@ class _LoginDesktopState extends State<LoginDesktop> {
       _isChecked = value!;
     });
   }
+<<<<<<< Updated upstream
 
   void saveEmail(String email) {
     databaseReference.child("users").push().set({
@@ -233,4 +247,6 @@ class _LoginDesktopState extends State<LoginDesktop> {
       print("Failed to save email: $error");
     });
   }
+=======
+>>>>>>> Stashed changes
 }
