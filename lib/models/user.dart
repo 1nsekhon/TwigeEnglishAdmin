@@ -2,7 +2,7 @@ class AdminUser {
   final String? uid; 
   String? email = "";
   bool approved = true;
-  AdminUser({required this.uid})
+  AdminUser({required this.uid});
 }
 
 class StudentUser {

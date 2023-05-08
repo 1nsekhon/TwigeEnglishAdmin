@@ -13,7 +13,7 @@ Future<void> main() async {
   final request = await httpClient.getUrl(Uri.parse("http://google.com"));
   final response = await request.close();
 
-void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

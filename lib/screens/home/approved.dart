@@ -47,7 +47,7 @@ class _ApprovedPageState extends State<ApprovedPage> {
           builder: (context, snapshot){
             if(snapshot.hasError) {
               return const Center(child: Text('error has occured'));
-            } 
+            }  
 
             else if(snapshot.hasData) {
                files = snapshot.data!;
