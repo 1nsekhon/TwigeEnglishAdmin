@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twige/models/user.dart';
 import 'package:twige/screens/home/home.dart';
+import 'package:twige/screens/home/users.dart';
 import 'package:twige/screens/wrapper.dart';
 import 'package:twige/services/auth.dart';
 import 'package:twige/styles.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamProvider<AdminUser?>.value(
+        catchError: (_, __) => null,
         value: AuthService().user,
         initialData: null,
         builder: (context, child) => ChangeNotifierProvider<MyAppState>(
@@ -38,8 +40,8 @@ class MyApp extends StatelessWidget {
                   useMaterial3: true,
                   colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
                 ),
-                home: Wrapper(),
-                //home: MyHomePage(),
+                //home: Wrapper(),
+                home: MyHomePage(),
               ),
             ));
   }

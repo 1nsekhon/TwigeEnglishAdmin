@@ -37,9 +37,6 @@ class _MyHomePageState extends State<MyHomePage> {
       case 3:
         page = UserManagement();
         break;
-      case 4:
-        page = UsersPage();
-        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -103,15 +100,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     icon: Icon(Icons.person_rounded),
                     label: Text(
                       'User Management',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.person_rounded),
-                    label: Text(
-                      'Users II',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),

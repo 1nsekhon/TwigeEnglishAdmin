@@ -5,7 +5,7 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //create user object based on FirebaseUser
-  AdminUser? _userFromCredUser(AdminUser? user) {
+  AdminUser? _userFromCredUser(User? user) {
     return user != null ? AdminUser(uid: user.uid) : null; //null if signed out
   }
 
@@ -13,9 +13,7 @@ class AuthService {
   //returns user object based on user class
   //null if user signed out
   Stream<AdminUser?> get user {
-    return _auth
-        .authStateChanges()
-        .map(_userFromCredUser as AdminUser? Function(User?));
+    return _auth.authStateChanges().map(_userFromCredUser);
   }
 
   //sign in with email + pass
@@ -23,7 +21,7 @@ class AuthService {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      AdminUser user = result.user as AdminUser;
+      User? user = result.user;
       return _userFromCredUser(user);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -32,6 +30,7 @@ class AuthService {
         print('Wrong password provided for that user.');
       }
     }
+    print("hello");
   }
 
   //register w/ phone number and Child's name
