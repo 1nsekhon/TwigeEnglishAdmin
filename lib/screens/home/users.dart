@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:twige/main.dart';
 import 'package:twige/styles.dart';
+import '../../services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UserManagement extends StatefulWidget {
   @override
@@ -13,6 +14,8 @@ class _UserManagementState extends State<UserManagement> {
   int _displayNum = 0;
   int _displayPoints = 0;
   int _displayIndex = 0;
+  String phoneNumber = "";
+  String name = "";
 
   bool _showAdd = false;
 
@@ -97,7 +100,9 @@ class _UserManagementState extends State<UserManagement> {
               ),
             ],
           ),
-          onPressed: () => toggleAdd(),
+          onPressed: () {
+            toggleAdd();
+          },
         ),
       ),
       body: Stack(children: [
@@ -209,19 +214,34 @@ class _UserManagementState extends State<UserManagement> {
                     ],
                   ),
                   TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Username',
-                    ),
-                  ),
+                      decoration: const InputDecoration(
+                        labelText: 'Name',
+                      ),
+                      validator: (val) =>
+                          val!.isNotEmpty ? 'Enter a Name' : null,
+                      onChanged: (val) {
+                        setState(() => name = val);
+                      }),
                   TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Phone Number',
-                    ),
-                  ),
+                      decoration: const InputDecoration(
+                        labelText: 'Phone Number',
+                      ),
+                      validator: (val) =>
+                          val!.isNotEmpty ? 'Enter a Phone Number' : null,
+                      onChanged: (val) {
+                        setState(() => phoneNumber = val);
+                      }),
                   SizedBox(height: 40),
                   ElevatedButton(
                     // style: ButtonStyle(backgroundColor: ),
-                    onPressed: () => submitUser(),
+                    onPressed: () {
+                      print(name);
+                      print(phoneNumber);
+                      AuthService.registerPhoneNumber(
+                          context, phoneNumber, name);
+                      print("bingo");
+                      //add to list of users
+                    },
                     child: Text(
                       'Add User',
                       style: TextStyle(fontWeight: FontWeight.bold),

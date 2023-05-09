@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twige/models/user.dart';
 import 'package:twige/screens/home/home.dart';
-import 'package:twige/screens/home/users.dart';
 import 'package:twige/screens/wrapper.dart';
 import 'package:twige/services/auth.dart';
 import 'package:twige/styles.dart';

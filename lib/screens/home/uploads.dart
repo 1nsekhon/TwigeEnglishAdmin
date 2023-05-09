@@ -13,12 +13,10 @@ class UploadsPage extends StatefulWidget {
 }
 
 class _UploadsPageState extends State<UploadsPage> {
-
   late Future<List<FirebaseFile>> futureFiles;
   var files;
 
   @override
-
   void initState() {
     super.initState();
 
@@ -26,8 +24,6 @@ class _UploadsPageState extends State<UploadsPage> {
   }
 
   @override
-  
-
   bool _showOverlay = false;
   String _english = 'default english';
   String _kinyar = 'default kinyar';
@@ -48,39 +44,39 @@ class _UploadsPageState extends State<UploadsPage> {
       //final uenglish = getEnglish(file);
       //final ukinyar = getKinyar(file);
       _source = files[index].url;
-      _english = files[index].english ;
-      _kinyar = files[index].kinyar ;
-
+      _english = files[index].english;
+      _kinyar = files[index].kinyar;
     });
     // print(accepted);
   }
 
-  
-
-  void _approve() async{
+  void _approve() async {
     toggleOverlay();
-    
+
     /* 
     MOVE FUNCTION 
     downloads from firebase
     uploads to firebase
     deletes locally stored photo 
     */
-    Reference ref = FirebaseStorage.instance.refFromURL(files[_displayIndex].url);
-    await FirebaseApi.move(ref, files[_displayIndex].english, files[_displayIndex].kinyar);
+    Reference ref =
+        FirebaseStorage.instance.refFromURL(files[_displayIndex].url);
+    await FirebaseApi.move(
+        ref, files[_displayIndex].english, files[_displayIndex].kinyar);
 
     // deletes from firebase
-    FirebaseStorage.instance.refFromURL(files[_displayIndex].url).delete(); 
-    
+    FirebaseStorage.instance.refFromURL(files[_displayIndex].url).delete();
+
     super.setState(() {
-      
       files.removeAt(_displayIndex);
     });
   }
 
   void _reject() {
     toggleOverlay();
-    FirebaseStorage.instance.refFromURL(files[_displayIndex].url).delete(); // deletes from firebase
+    FirebaseStorage.instance
+        .refFromURL(files[_displayIndex].url)
+        .delete(); // deletes from firebase
 
     super.setState(() {
       files.removeAt(_displayIndex);
@@ -104,46 +100,44 @@ class _UploadsPageState extends State<UploadsPage> {
       body: Stack(
         children: [
           FutureBuilder(
-          future:futureFiles,
-          builder: (context, snapshot){
-            if(snapshot.hasError) {
-              return const Center(child: Text('error has occured'));
-            } 
+              future: futureFiles,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Center(child: Text('error has occured'));
+                } else if (snapshot.hasData) {
+                  files = snapshot.data!;
 
-            else if(snapshot.hasData) {
-               files = snapshot.data!;
-              
-                return LayoutBuilder(builder: (context, constraints) {
-                  return GridView.builder(
-                  // primary: false,
-              
-                  padding: const EdgeInsets.fromLTRB(40, 20, 20, 0),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  crossAxisCount: constraints.maxWidth > 700 ? 4 : 2,
-                  ),
-                  itemCount:files.length,
-                  itemBuilder: (context, index) {
-                  final file = files[index]; // this contains object that contains url to source
-                
-                  final uploadItem = 
-                  Upload(
-                   english: file.english ,
-                   kinyar: file.kinyar ,
-                   source: file.url
-                 );
-                
-                    return GestureDetector(
-                    onTap: () => seeOptions(index), // possibly not neccesary
-                    child: uploadItem,
-                   );
-                 },
-                 );
-                });
-            }
-            return const Center(child: CircularProgressIndicator());
-          }),
+                  return LayoutBuilder(builder: (context, constraints) {
+                    return GridView.builder(
+                      // primary: false,
+
+                      padding: const EdgeInsets.fromLTRB(40, 20, 20, 0),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                        crossAxisCount: constraints.maxWidth > 700 ? 4 : 2,
+                      ),
+                      itemCount: files.length,
+                      itemBuilder: (context, index) {
+                        final file = files[
+                            index]; // this contains object that contains url to source
+
+                        final uploadItem = Upload(
+                            english: file.english,
+                            kinyar: file.kinyar,
+                            source: file.url);
+
+                        return GestureDetector(
+                          onTap: () =>
+                              seeOptions(index), // possibly not neccesary
+                          child: uploadItem,
+                        );
+                      },
+                    );
+                  });
+                }
+                return const Center(child: CircularProgressIndicator());
+              }),
           if (_showOverlay)
             Center(
               child: Container(
@@ -165,7 +159,30 @@ class _UploadsPageState extends State<UploadsPage> {
                           onTap: toggleOverlay, child: Icon(Icons.close))
                     ],
                   ),
-                  Image(height: 300, width: 300, image: NetworkImage(_source)),
+                  /* Container(
+                      constraints: BoxConstraints(
+                        maxWidth: 300, // maximum width of the image
+                        maxHeight: 300, // maximum height of the image
+                      ),
+                      child: Image(
+                        image: NetworkImage(_source),
+                        /* height: 200, // set maximum height
+                    width: 300, // set maximum width */
+                        //fit: BoxFit.contain, // set the fit type to contain
+                      )), */
+                  AspectRatio(
+                    aspectRatio: 1.0,
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: 300,
+                        maxHeight: 300,
+                      ),
+                      child: Image.network(
+                        _source,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
                   Text(
                     _kinyar,
                     style: TextStyle(fontSize: 20),

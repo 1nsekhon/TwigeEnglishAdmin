@@ -193,6 +193,7 @@ class MainPage extends StatelessWidget {
           ),
           onPressed: () async {
             await _auth.signingOut();
+            print("end of sign out");
           },
         ),
       ),
@@ -216,10 +217,10 @@ class MainPage extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => UserManagement()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UserManagement()));
                         },
                         child: HomeCard(
                           cardName: 'Active Users',
