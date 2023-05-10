@@ -1,7 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:twige/screens/home/home.dart';
 import 'package:twige/screens/wrapper.dart';
+import 'package:twige/services/firestore_database.dart';
 import '../models/user.dart';
+import '../styles.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -34,20 +39,21 @@ class AuthService {
     }
   }
 
-  //register w/ phone number and Child's name
-  static Future<void> registerPhoneNumber(
+  //register w/ phone number and student name
+  Future registerPhoneNumber(
       BuildContext context, String phoneNumber, String name) async {
     try {
+      UserCredential? result;
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
-          await FirebaseAuth.instance.signInWithCredential(credential);
+          result = await FirebaseAuth.instance.signInWithCredential(credential);
           // ignore: use_build_context_synchronously
-          Navigator.pushNamedAndRemoveUntil(
+          /* Navigator.pushNamedAndRemoveUntil(
             context,
             '/home',
             (route) => false,
-          );
+          ); */
         },
         verificationFailed: (FirebaseAuthException e) {
           if (e.code == 'invalid-phone-number') {
@@ -64,6 +70,14 @@ class AuthService {
         },
         codeAutoRetrievalTimeout: (String verificationId) {},
       );
+      if (result != null) {
+        User user = result!.user!;
+        await FirestoreService(uid: user.uid)
+            .updateStudentData(name, phoneNumber, 0);
+        return _userFromCredUser(user);
+      } else {
+        return null;
+      }
     } catch (e) {
       print(
           'An error occurred while verifying the phone number: ${e.toString()}');
@@ -75,6 +89,9 @@ class AuthService {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      User? user = result.user;
+
+      return _userFromCredUser(user);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
