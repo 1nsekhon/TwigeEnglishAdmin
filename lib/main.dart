@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamProvider<AdminUser?>.value(
+        catchError: (_, __) => null,
         value: AuthService().user,
         initialData: null,
         builder: (context, child) => ChangeNotifierProvider<MyAppState>(

@@ -4,8 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:twige/services/auth.dart';
 
 final databaseReference = FirebaseDatabase.instance.reference();
-TextEditingController emailController = TextEditingController();
-TextEditingController passController = TextEditingController();
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
