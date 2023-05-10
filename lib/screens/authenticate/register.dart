@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:twige/services/auth.dart';
@@ -40,6 +41,24 @@ class _RegisterState extends State<Register> {
   String email = '';
   //password field state
   String password = '';
+
+  void registerUser(String emailAddress, String password) async {
+    try {
+      final credential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailAddress,
+        password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,21 +147,11 @@ class _RegisterState extends State<Register> {
                           ? 'Enter a Password that is 6+ characters'
                           : null,
                       onChanged: (val) {
-                        setState(() => email = val);
+                        setState(() => password = val);
                       }),
                   const SizedBox(height: 25),
                   TextButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        dynamic result = await _auth
-                            .registerWithEmailAndPassword(email, password);
-                        if (result == null) {
-                          setState(() {
-                            error = 'Please supply a valid email';
-                          });
-                        }
-                      }
-                    },
+                    onPressed: () => {registerUser(email, password)},
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.green,
                       padding: const EdgeInsets.symmetric(

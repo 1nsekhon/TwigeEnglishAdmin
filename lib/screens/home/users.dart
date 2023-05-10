@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:twige/main.dart';
+import 'package:provider/provider.dart';
 import 'package:twige/styles.dart';
+import '../../services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'home.dart';
 
 class UserManagement extends StatefulWidget {
   @override
@@ -8,22 +12,43 @@ class UserManagement extends StatefulWidget {
 }
 
 class _UserManagementState extends State<UserManagement> {
+  FirebaseFirestore db = FirebaseFirestore.instance;
   bool _showOverlay = false;
   String _displayName = 'No user chosen';
-  int _displayNum = 0;
+  String _displayNum = "";
   int _displayPoints = 0;
   int _displayIndex = 0;
+  String phoneNumber = "";
+  String name = "";
+  String error = "";
 
   bool _showAdd = false;
+  final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
+  List<User> users = [];
 
-  //example list of users
-  // List<User> users = [
-  //   User(username: 'user1', phone: 111000),
-  //   User(username: 'user2', phone: 222000),
-  //   User(username: 'user3', phone: 333000),
-  //   User(username: 'user4', phone: 444000),
-  //   User(username: 'user5', phone: 555000),
-  // ];
+   void addUser(User user) async{
+    print(user.toJson());
+    final CollectionReference userRef= db.collection("users");
+    await userRef.doc(user.phone).set(user.toJson());
+    toggleAdd();
+   }
+
+
+     void getUsers() async{
+    
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    final CollectionReference userRef= db.collection("users");
+    await userRef.get().then(
+      (querySnapshot) {
+        setState(() {
+          users.clear();
+          users = querySnapshot.docs.map((u) => User.fromSnapshot(u)).toList();
+        });
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+  }
 
   void _toggleOverlay() {
     setState(() {
@@ -37,10 +62,11 @@ class _UserManagementState extends State<UserManagement> {
       _displayName = users[index].username;
       _displayPoints = users[index].points;
       _displayNum = users[index].phone;
-
       _toggleOverlay();
     });
   }
+
+
 
   void deleteUser() {
     _toggleOverlay();
@@ -58,13 +84,14 @@ class _UserManagementState extends State<UserManagement> {
   void submitUser() {
     setState(() {
       _displayName = '';
-      _displayNum = 0;
+      _displayNum =  "";
       _displayPoints = 0;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    getUsers();
     return Scaffold(
       backgroundColor: primaryColor,
       appBar: AppBar(
@@ -97,7 +124,21 @@ class _UserManagementState extends State<UserManagement> {
               ),
             ],
           ),
-          onPressed: () => toggleAdd(),
+          onPressed: () {
+            toggleAdd();
+            ChangeNotifierProvider<MyAppState>(
+              create: (context) => MyAppState(),
+              child: MaterialApp(
+                title: 'Twige Admin App',
+                theme: ThemeData(
+                  useMaterial3: true,
+                  colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
+                ),
+                //home: Wrapper(),
+                home: MyHomePage(),
+              ),
+            );
+          },
         ),
       ),
       body: Stack(children: [
@@ -189,6 +230,8 @@ class _UserManagementState extends State<UserManagement> {
           ),
         if (_showAdd)
           Center(
+              child: Form(
+            key: _formKey,
             child: Column(children: [
               SizedBox(height: 30),
               Container(
@@ -209,28 +252,39 @@ class _UserManagementState extends State<UserManagement> {
                     ],
                   ),
                   TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Username',
-                    ),
-                  ),
+                      decoration: const InputDecoration(
+                        labelText: 'Name',
+                      ),
+                      validator: (val) => val!.isEmpty ? 'Enter Name' : null,
+                      onChanged: (val) {
+                        setState(() => name = val);
+                      }),
                   TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Phone Number',
-                    ),
-                  ),
+                      decoration: const InputDecoration(
+                        labelText: 'Phone Number',
+                      ),
+                      validator: (val) =>
+                          val!.isEmpty ? 'Enter a Phone Number' : null,
+                      onChanged: (val) {
+                        setState(() => phoneNumber = val);
+                      }),
                   SizedBox(height: 40),
                   ElevatedButton(
                     // style: ButtonStyle(backgroundColor: ),
-                    onPressed: () => submitUser(),
+                    onPressed: () {addUser(User(username: name,phone: phoneNumber));},
                     child: Text(
                       'Add User',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  )
+                  ),
+                  /* Text(
+                    error,
+                    style: TextStyle(color: Colors.red, fontSize: 14.0),
+                  ), */
                 ]),
               )
             ]),
-          )
+          ))
       ]),
     );
   }
@@ -238,16 +292,28 @@ class _UserManagementState extends State<UserManagement> {
 
 class User {
   String username;
-  int phone;
+  String phone;
   int points = 0;
 
   User({required this.username, required this.phone, points});
+
+  Map<String, dynamic> toJson() => {
+        'name': username,
+        'phone': phone,
+      };
+  
+ static User fromSnapshot(DocumentSnapshot snapshot) {
+    print(snapshot);
+    return User(
+        username: snapshot['name'],
+        phone: snapshot['phone']);
+  }
 
   String name() {
     return username;
   }
 
-  int num() {
+  String num() {
     return phone;
   }
 }
@@ -259,6 +325,7 @@ class UserInfo extends StatelessWidget {
   int points;
 
   UserInfo({required this.name, required this.num, this.points = 0});
+  
 
   @override
   Widget build(BuildContext context) {
