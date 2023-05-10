@@ -8,12 +8,14 @@ class FirebaseFile {
   final String url;
   final String english;
   final String  kinyar;
+  final String user;
 
   const FirebaseFile({
     required this.ref,
     required this.name,
     required this.url,
     required this.english,
-    required this.kinyar
+    required this.kinyar,
+    required this.user
   });
 }

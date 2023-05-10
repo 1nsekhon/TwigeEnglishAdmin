@@ -26,6 +26,14 @@ class FirebaseApi {
 
   }
 
+  static Future<String> _getUser(Reference ref) async{
+      final metadata = await ref.getMetadata();
+
+      String kinyar = metadata.customMetadata!['user'] ?? '';
+      return kinyar;
+
+  }
+
   static Future<List<FirebaseFile>> listAllApproved() async {
     final ref = FirebaseStorage.instance.ref('approved_photos/');
     final result = await ref.listAll();
@@ -34,10 +42,12 @@ class FirebaseApi {
 
     List<String> englishh = [];
     List<String> kinyarr = [];
+    List<String> userr = [];
 
     for( var items in result.items){
       englishh.add(await _getEnglish(items));
       kinyarr.add(await _getKinyar(items));
+      userr.add(await _getUser(items));
     }
 
     return urls
@@ -49,8 +59,9 @@ class FirebaseApi {
           //final kinyar = _getKinyar(ref);
           final english = englishh[index];
           final kinyar = kinyarr[index];
+          final user = userr[index];
 
-          final file = FirebaseFile(ref: ref, name: name, url: url, english: english, kinyar: kinyar);
+          final file = FirebaseFile(ref: ref, name: name, url: url, english: english, kinyar: kinyar, user: user);
          
 
           return MapEntry(index, file);
@@ -73,10 +84,12 @@ static Future<ListResult> listAllApprovedReferences() async {
 
     List<String> englishh = [];
     List<String> kinyarr = [];
+    List<String> userr = [];
 
     for( var items in result.items){
       englishh.add(await _getEnglish(items));
       kinyarr.add(await _getKinyar(items));
+      userr.add(await _getUser(items));
     }
 
     return urls
@@ -88,8 +101,9 @@ static Future<ListResult> listAllApprovedReferences() async {
           //final kinyar = _getKinyar(ref);
           final english = englishh[index];
           final kinyar = kinyarr[index];
+          final user = userr[index];
 
-          final file = FirebaseFile(ref: ref, name: name, url: url, english: english, kinyar: kinyar);
+          final file = FirebaseFile(ref: ref, name: name, url: url, english: english, kinyar: kinyar, user:user);
          
 
           return MapEntry(index, file);
