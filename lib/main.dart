@@ -11,9 +11,7 @@ import 'package:universal_io/io.dart';
 
 Future<void> main() async {
   final httpClient = HttpClient();
-  final request = await httpClient.getUrl(Uri.parse("http://google.com"));
-  final response = await request.close();
-
+  
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
