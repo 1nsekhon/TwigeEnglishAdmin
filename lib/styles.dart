@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:twige/widgets/upload.dart';
 import 'package:twige/screens/home/users.dart';
@@ -50,13 +51,7 @@ List<Upload> uploads = [
 
 List<Upload> accepted = [];
 
-List<User> users = [
-  User(username: 'Dan', phone: 111000),
-  User(username: 'Ben', phone: 222000),
-  User(username: 'Candace', phone: 333000),
-  User(username: 'Barry', phone: 444000),
-  User(username: 'Gladys', phone: 555000),
-];
+List<User> users = [];
 
 abstract class TextThemes {
   static const TextStyle infoHeader = TextStyle(
