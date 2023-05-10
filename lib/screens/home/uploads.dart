@@ -31,6 +31,7 @@ class _UploadsPageState extends State<UploadsPage> {
   bool _showOverlay = false;
   String _english = 'default english';
   String _kinyar = 'default kinyar';
+  String _user = 'default user';
   String _source = 'some source';
   int _displayIndex = 0;
 
@@ -50,6 +51,7 @@ class _UploadsPageState extends State<UploadsPage> {
       _source = files[index].url;
       _english = files[index].english ;
       _kinyar = files[index].kinyar ;
+      _user = files[index].user;
 
     });
     // print(accepted);
@@ -165,14 +167,22 @@ class _UploadsPageState extends State<UploadsPage> {
                           onTap: toggleOverlay, child: Icon(Icons.close))
                     ],
                   ),
-                  Image(height: 300, width: 300, image: NetworkImage(_source)),
+                  Expanded(
+                   child: SizedBox(
+                      child: Image(fit: BoxFit.fill, image: NetworkImage(_source)),
+                    ),
+                   ),
                   Text(
                     _kinyar,
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 20,),
                   ),
                   Text(
                     _english,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                   Text(
+                    "Submited By: $_user",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal ),
                   ),
                   SizedBox(height: 20),
                   Row(

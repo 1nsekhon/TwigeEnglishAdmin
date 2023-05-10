@@ -11,6 +11,9 @@ import 'package:twige/services/auth.dart';
 import 'package:twige/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../models/firebase_file.dart';
+import '../../services/database_manager.dart';
+
 class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -19,7 +22,7 @@ class MyHomePage extends StatefulWidget {
 final AuthService _auth = AuthService();
 
 class _MyHomePageState extends State<MyHomePage> {
-  var selectedIndex = 2;
+  var selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -158,10 +161,30 @@ class MyAppState extends ChangeNotifier {
   }
 }
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+
+  late Future<List<FirebaseFile>> futureFiles;
+  var files;
+
+  @override
+
+  void initState() {
+    super.initState();
+
+    futureFiles = FirebaseApi.listAllUnapproved();
+  }
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
+
+
+  @override
 
     IconData icon;
     // if (appState.favorites.contains(pair)) {
@@ -208,146 +231,162 @@ class MainPage extends StatelessWidget {
           },
         ),
       ),
-      body: LayoutBuilder(builder: (context, constraints) {
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(60, 30, 0, 30),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Text(
-                  //   'Overview:\n',
-                  //   style: TextStyle(
-                  //     fontWeight: FontWeight.bold,
-                  //     color: whiteColor,
-                  //   ),
-                  //   textScaleFactor: 1.5,
-                  // ),
-                  Row(
+      body: Stack(
+        children: [
+          FutureBuilder(
+          future:futureFiles,
+          builder: (context, snapshot){
+            if(snapshot.hasError) {
+              return const Center(child: Text('error has occured'));
+            } 
+
+            else if(snapshot.hasData) {
+               files = snapshot.data!;
+                return LayoutBuilder(builder: (context, constraints) {
+                  return Column(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => UserManagement()));
-                        },
-                        child: HomeCard(
-                          cardName: 'Active Users',
-                          count: users.length,
-                          icon: Icon(
-                            Icons.person,
-                            color: whiteColor,
-                            size: 30.0,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 40),
-                      HomeCard(
-                        cardName: 'Uploads',
-                        count: uploads.length,
-                        icon: Icon(
-                          Icons.upload_rounded,
-                          color: whiteColor,
-                          size: 30.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              child: Expanded(
-                child: Container(
-                    color: secondaryColor,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(60, 20, 60, 60),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Pending Approval...',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: whiteColor,
-                              )),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              if (uploads.isEmpty) Text('No pending uploads'),
-                              if (uploads.isNotEmpty)
-                                Container(
-                                  height: 150,
-                                  width: 150,
-                                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                  child: uploads[0],
-                                ),
-                              if (uploads.length >= 2)
-                                Container(
-                                  height: 150,
-                                  width: 150,
-                                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                  child: uploads[1],
-                                ),
-                              if (uploads.length >= 3)
-                                Container(
-                                  height: 150,
-                                  width: 150,
-                                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                  child: uploads[2],
-                                ),
-                            ],
-                          ),
-                          Container(
-                            height: 20,
-                          ),
-                          Text('Accepted Uploads...',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: whiteColor,
-                              )),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          if (accepted.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(60, 30, 0, 30),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Text(
+                            //   'Overview:\n',
+                            //   style: TextStyle(
+                            //     fontWeight: FontWeight.bold,
+                            //     color: whiteColor,
+                            //   ),
+                            //   textScaleFactor: 1.5,
+                            // ),
                             Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                if (accepted.isNotEmpty)
-                                  Container(
-                                    height: 150,
-                                    width: 150,
-                                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                    child: accepted[0],
+                                GestureDetector(
+                                  onTap: () {
+                                    // Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) => UserManagement()));
+                                  },
+                                  child: HomeCard(
+                                    cardName: 'Active Users',
+                                    count: users.length,
+                                    icon: Icon(
+                                      Icons.person,
+                                      color: whiteColor,
+                                      size: 30.0,
+                                    ),
                                   ),
-                                if (accepted.length >= 2)
-                                  Container(
-                                    height: 150,
-                                    width: 150,
-                                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                    child: accepted[1],
+                                ),
+                                SizedBox(width: 40),
+                                HomeCard(
+                                  cardName: 'Uploads',
+                                  count: files.length,
+                                  icon: Icon(
+                                    Icons.upload_rounded,
+                                    color: whiteColor,
+                                    size: 30.0,
                                   ),
-                                if (accepted.length >= 3)
-                                  Container(
-                                    height: 150,
-                                    width: 150,
-                                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                    child: accepted[2],
-                                  ),
+                                ),
                               ],
                             ),
-                        ],
+                          ],
+                        ),
                       ),
-                    )),
-              ),
-            ),
-          ],
-        );
-      }),
+                      /*Container(
+                        child: Expanded(
+                          child: Container(
+                              color: secondaryColor,
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(60, 20, 60, 60),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Pending Approval...',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: whiteColor,
+                                        )),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        //if (uploads.isEmpty) Text('No pending uploads'),
+                                        if (uploads.isNotEmpty)
+                                          Container(
+                                            height: 150,
+                                            width: 150,
+                                            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                            child: uploads[0],
+                                          ),
+                                        if (uploads.length >= 2)
+                                          Container(
+                                            height: 150,
+                                            width: 150,
+                                            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                            child: uploads[1],
+                                          ),
+                                        if (uploads.length >= 3)
+                                          Container(
+                                            height: 150,
+                                            width: 150,
+                                            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                            child: uploads[2],
+                                          ),
+                                      ],
+                                    ),
+                                    Container(
+                                      height: 20,
+                                    ),
+                                    Text('Accepted Uploads...',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: whiteColor,
+                                        )),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    if (accepted.isNotEmpty)
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          if (accepted.isNotEmpty)
+                                            Container(
+                                              height: 150,
+                                              width: 150,
+                                              padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                              child: accepted[0],
+                                            ),
+                                          if (accepted.length >= 2)
+                                            Container(
+                                              height: 150,
+                                              width: 150,
+                                              padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                              child: accepted[1],
+                                            ),
+                                          if (accepted.length >= 3)
+                                            Container(
+                                              height: 150,
+                                              width: 150,
+                                              padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                              child: accepted[2],
+                                            ),
+                                        ],
+                                      ), 
+                                  ],
+                                ),
+                              )),
+                        ),
+                      ),*/
+                    ],
+                  );
+                });
+            }
+            return const Center(child: CircularProgressIndicator());
+          }),
+        ]
+      )
     );
   }
 }

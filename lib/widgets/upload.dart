@@ -31,7 +31,11 @@ class _UploadState extends State<Upload> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Image(fit: BoxFit.fill, image: NetworkImage(widget.source)),
+         Expanded(
+              child: SizedBox(
+              child: Image(fit: BoxFit.fill, image: NetworkImage(widget.source)),
+              ),
+            ),
           Text(
             widget.kinyar,
             style: TextStyle(
