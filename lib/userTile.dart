@@ -14,12 +14,12 @@ class UserTile extends StatefulWidget {
 
 class _UserTileState extends State<UserTile> {
   String _username = 'some user!';
-  int _phone = 0;
+  String _phone = "";
 
   void _deleteUser(String username) {
     setState(() {
       _username = '';
-      _phone = 0;
+      _phone = "";
     });
   }
 
@@ -35,7 +35,7 @@ class _UserTileState extends State<UserTile> {
 
 class UserListTile extends StatefulWidget {
   final String username;
-  final int phone;
+  final String phone;
   final Function deleteUser;
 
   UserListTile({
