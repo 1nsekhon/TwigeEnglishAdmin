@@ -1,4 +1,4 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twige/screens/home/uploads.dart';
@@ -7,6 +7,7 @@ import 'package:twige/screens/home/approved.dart';
 import 'package:twige/screens/home/usersPage.dart';
 import 'package:english_words/english_words.dart';
 import 'package:twige/services/auth.dart';
+import 'package:twige/services/firestore_database.dart';
 import 'package:twige/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -154,25 +155,25 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-
   late Future<List<FirebaseFile>> futureFiles;
+  late Future<QuerySnapshot<Map<String, dynamic>>> allUsers;
   var files;
+  var users;
 
   @override
-
   void initState() {
     super.initState();
-
     futureFiles = FirebaseApi.listAllUnapproved();
+    final ref = FirebaseFirestore.instance.collection('users');
+    allUsers = ref.get();
+    //.then((snapshot) => snapshot.size) as int
   }
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
 
-
-  @override
-
+    @override
     IconData icon;
     // if (appState.favorites.contains(pair)) {
     //   icon = Icons.favorite;
@@ -181,105 +182,105 @@ class _MainPageState extends State<MainPage> {
     // }
 
     return Scaffold(
-      backgroundColor: primaryColor,
-      appBar: AppBar(
-          backgroundColor: secondaryColor,
-          centerTitle: false,
-          leading: SizedBox(width: 60),
-          title: Text(
-            'Home',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: whiteColor,
+        backgroundColor: primaryColor,
+        appBar: AppBar(
+            backgroundColor: secondaryColor,
+            centerTitle: false,
+            leading: SizedBox(width: 60),
+            title: Text(
+              'Home',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: whiteColor,
+              ),
+            )),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+        floatingActionButton: SizedBox(
+          height: 40,
+          width: 130,
+          child: FloatingActionButton(
+            backgroundColor: whiteColor,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.logout_rounded,
+                  color: secondaryColor,
+                ),
+                Text(
+                  '   Logout',
+                  style: TextStyle(
+                      color: secondaryColor, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
-          )),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-      floatingActionButton: SizedBox(
-        height: 40,
-        width: 130,
-        child: FloatingActionButton(
-          backgroundColor: whiteColor,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.logout_rounded,
-                color: secondaryColor,
-              ),
-              Text(
-                '   Logout',
-                style: TextStyle(
-                    color: secondaryColor, fontWeight: FontWeight.bold),
-              ),
-            ],
+            onPressed: () async {
+              await _auth.signingOut();
+            },
           ),
-          onPressed: () async {
-            await _auth.signingOut();
-          },
         ),
-      ),
-      body: Stack(
-        children: [
+        body: Stack(children: [
           FutureBuilder(
-          future:futureFiles,
-          builder: (context, snapshot){
-            if(snapshot.hasError) {
-              return const Center(child: Text('error has occured'));
-            } 
-
-            else if(snapshot.hasData) {
-               files = snapshot.data!;
-                return LayoutBuilder(builder: (context, constraints) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(60, 30, 0, 30),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Text(
-                            //   'Overview:\n',
-                            //   style: TextStyle(
-                            //     fontWeight: FontWeight.bold,
-                            //     color: whiteColor,
-                            //   ),
-                            //   textScaleFactor: 1.5,
-                            // ),
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    // Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (context) => UserManagement()));
-                                  },
-                                  child: HomeCard(
-                                    cardName: 'Active Users',
-                                    count: users.length,
+              //future: futureFiles,
+              future: Future.wait([futureFiles, allUsers] as Iterable<Future>),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Center(child: Text('error has occured'));
+                } else if (snapshot.hasData) {
+                  files = snapshot.data![0];
+                  users = snapshot.data![1];
+                  return LayoutBuilder(builder: (context, constraints) {
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(60, 30, 0, 30),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Text(
+                              //   'Overview:\n',
+                              //   style: TextStyle(
+                              //     fontWeight: FontWeight.bold,
+                              //     color: whiteColor,
+                              //   ),
+                              //   textScaleFactor: 1.5,
+                              // ),
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //         builder: (context) => UserManagement()));
+                                    },
+                                    child: HomeCard(
+                                      cardName: 'Active Users',
+                                      //count: 0,
+                                      count: users.size,
+                                      icon: Icon(
+                                        Icons.person,
+                                        color: whiteColor,
+                                        size: 30.0,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 40),
+                                  HomeCard(
+                                    cardName: 'Uploads',
+                                    count: files.length,
                                     icon: Icon(
-                                      Icons.person,
+                                      Icons.upload_rounded,
                                       color: whiteColor,
                                       size: 30.0,
                                     ),
                                   ),
-                                ),
-                                SizedBox(width: 40),
-                                HomeCard(
-                                  cardName: 'Uploads',
-                                  count: files.length,
-                                  icon: Icon(
-                                    Icons.upload_rounded,
-                                    color: whiteColor,
-                                    size: 30.0,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      /*Container(
+                        /*Container(
                         child: Expanded(
                           child: Container(
                               color: secondaryColor,
@@ -366,15 +367,13 @@ class _MainPageState extends State<MainPage> {
                               )),
                         ),
                       ),*/
-                    ],
-                  );
-                });
-            }
-            return const Center(child: CircularProgressIndicator());
-          }),
-        ]
-      )
-    );
+                      ],
+                    );
+                  });
+                }
+                return const Center(child: CircularProgressIndicator());
+              }),
+        ]));
   }
 }
 

@@ -18,4 +18,10 @@ class FirestoreService {
       'name': name,
     });
   }
+
+  Future listAllStudent() async {
+    final ref = FirebaseFirestore.instance.collection('Students');
+    int numberOfUsers = await ref.get().then((snapshot) => snapshot.size);
+    return numberOfUsers;
+  }
 }
