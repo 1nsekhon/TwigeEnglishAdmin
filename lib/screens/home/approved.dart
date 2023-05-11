@@ -67,12 +67,13 @@ class _ApprovedPageState extends State<ApprovedPage> {
                         // ADD THESE ONCE CUSTOM METADATA IS ADDED
                         //final uenglish = getEnglish(file);
                         //final ukinyar = getKinyar(file);
+                        print(file.kinyar);
                         final uploadItem = Upload(
                             // ADD THESE ONCE CUSTOM METADATA IS ADDED
                             //english: uenglish, //filename which can also be the name of the item
                             //kinyar: ukinyar,
                             english: file.english,
-                            kinyar: file.english,
+                            kinyar: file.kinyar,
                             source: file.url);
                         return GestureDetector(
                           //onTap: () => seeOptions(index), // possibly not neccesary

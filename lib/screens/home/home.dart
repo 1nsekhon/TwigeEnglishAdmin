@@ -267,7 +267,7 @@ class _MainPageState extends State<MainPage> {
                                   ),
                                   SizedBox(width: 40),
                                   HomeCard(
-                                    cardName: 'Uploads',
+                                    cardName: 'Pending Uploads',
                                     count: files.length,
                                     icon: Icon(
                                       Icons.upload_rounded,
